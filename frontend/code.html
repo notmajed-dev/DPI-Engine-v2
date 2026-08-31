@@ -1,0 +1,824 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>DPI_ENGINE</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Space+Mono:ital,wght@0,400;0,700;1,400;1,700&amp;family=Bebas+Neue&amp;family=JetBrains+Mono:ital,wght@0,100..800;1,100..800&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "on-secondary-fixed": "#1c1b1b",
+                        "surface-container-low": "#1a1c1c",
+                        "secondary-container": "#474746",
+                        "on-secondary-container": "#b7b5b4",
+                        "on-tertiary-fixed": "#1b1c1c",
+                        "on-background": "#e2e2e2",
+                        "inverse-surface": "#e2e2e2",
+                        "secondary-fixed-dim": "#c8c6c5",
+                        "secondary-fixed": "#e5e2e1",
+                        "primary-container": "#c3f400",
+                        "surface-container-high": "#282a2b",
+                        "on-tertiary": "#303030",
+                        "surface-variant": "#333535",
+                        "on-secondary": "#313030",
+                        "primary": "#ffffff",
+                        "outline": "#8e9379",
+                        "background": "#121414",
+                        "tertiary-container": "#e4e2e1",
+                        "error": "#ffb4ab",
+                        "surface-bright": "#37393a",
+                        "on-surface-variant": "#c4c9ac",
+                        "surface-container": "#1e2020",
+                        "on-primary-fixed-variant": "#3c4d00",
+                        "on-secondary-fixed-variant": "#474746",
+                        "inverse-on-surface": "#2f3131",
+                        "tertiary-fixed-dim": "#c8c6c6",
+                        "on-primary-fixed": "#161e00",
+                        "on-tertiary-fixed-variant": "#474747",
+                        "surface-container-lowest": "#0c0f0f",
+                        "on-tertiary-container": "#656464",
+                        "on-primary-container": "#556d00",
+                        "secondary": "#c8c6c5",
+                        "on-error": "#690005",
+                        "primary-fixed": "#c3f400",
+                        "primary-fixed-dim": "#abd600",
+                        "tertiary": "#ffffff",
+                        "on-surface": "#e2e2e2",
+                        "inverse-primary": "#506600",
+                        "outline-variant": "#444933",
+                        "on-error-container": "#ffdad6",
+                        "tertiary-fixed": "#e4e2e1",
+                        "surface-dim": "#121414",
+                        "surface": "#121414",
+                        "error-container": "#93000a",
+                        "surface-tint": "#abd600",
+                        "surface-container-highest": "#333535",
+                        "on-primary": "#283500",
+                        "light-bg": "#F5F5F0",
+                        "light-text": "#121414"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "full": "9999px"
+                    },
+                    "spacing": {
+                        "grid-size": "32px",
+                        "gutter": "16px",
+                        "unit": "4px",
+                        "margin-desktop": "40px",
+                        "margin-mobile": "16px"
+                    },
+                    "fontFamily": {
+                        "label-code": ["Space Mono"],
+                        "headline-md": ["Bebas Neue"],
+                        "headline-lg": ["Bebas Neue"],
+                        "label-prefix": ["Space Mono"],
+                        "display-lg": ["Bebas Neue"],
+                        "headline-lg-mobile": ["Bebas Neue"],
+                        "body-lg": ["JetBrains Mono"],
+                        "body-md": ["JetBrains Mono"]
+                    },
+                    "fontSize": {
+                        "label-code": ["12px", { "lineHeight": "1.0", "fontWeight": "700" }],
+                        "headline-md": ["32px", { "lineHeight": "1.2", "fontWeight": "400" }],
+                        "headline-lg": ["64px", { "lineHeight": "1.1", "fontWeight": "400" }],
+                        "label-prefix": ["14px", { "lineHeight": "1.0", "fontWeight": "400" }],
+                        "display-lg": ["96px", { "lineHeight": "1.0", "letterSpacing": "-0.02em", "fontWeight": "400" }],
+                        "headline-lg-mobile": ["48px", { "lineHeight": "1.1", "fontWeight": "400" }],
+                        "body-lg": ["16px", { "lineHeight": "1.6", "fontWeight": "400" }],
+                        "body-md": ["14px", { "lineHeight": "1.5", "fontWeight": "400" }]
+                    }
+                }
+            }
+        }
+    </script>
+<style>
+        body {
+            background-color: theme('colors.background');
+            color: theme('colors.on-surface');
+            /* Cyber Brutalism Grid Texture */
+            background-image: 
+                linear-gradient(theme('colors.surface-container-highest') 1px, transparent 1px),
+                linear-gradient(90deg, theme('colors.surface-container-highest') 1px, transparent 1px);
+            background-size: 32px 32px;
+            background-position: center top;
+        }
+
+        html.light body {
+            background-color: theme('colors.light-bg');
+            color: theme('colors.light-text');
+            background-image: 
+                linear-gradient(theme('colors.secondary-fixed-dim') 1px, transparent 1px),
+                linear-gradient(90deg, theme('colors.secondary-fixed-dim') 1px, transparent 1px);
+        }
+
+        html.light .bg-background { background-color: theme('colors.light-bg'); }
+        html.light .text-on-surface { color: theme('colors.light-text'); }
+        html.light .bg-surface-container-low { background-color: theme('colors.tertiary-container'); }
+        html.light .bg-surface-container-lowest { background-color: theme('colors.secondary-fixed'); }
+        html.light .bg-surface-container-highest { background-color: theme('colors.secondary-fixed-dim'); }
+        html.light .text-on-surface-variant { color: theme('colors.on-secondary-fixed'); }
+        html.light .border-outline-variant { border-color: theme('colors.outline'); }
+        html.light .bg-surface-container-high { background-color: theme('colors.secondary'); }
+
+        
+        .hazard-stripe {
+            background: repeating-linear-gradient(
+                45deg,
+                theme('colors.primary-fixed'),
+                theme('colors.primary-fixed') 20px,
+                #000 20px,
+                #000 40px
+            );
+        }
+        
+        html.light .hazard-stripe {
+             background: repeating-linear-gradient(
+                45deg,
+                theme('colors.primary-fixed'),
+                theme('colors.primary-fixed') 20px,
+                theme('colors.light-bg') 20px,
+                theme('colors.light-bg') 40px
+            );
+        }
+
+        .glitch-hover:hover {
+            transform: skew(-2deg) translate(2px, 0);
+            text-shadow: 2px 0 theme('colors.primary-fixed'), -2px 0 theme('colors.error');
+        }
+        
+        .terminal-block {
+            position: relative;
+        }
+        .terminal-block::before {
+            content: '█';
+            position: absolute;
+            left: -1em;
+            color: theme('colors.primary-fixed');
+            animation: blink 1s step-end infinite;
+        }
+        @keyframes blink { 50% { opacity: 0; } }
+
+        .id-card {
+            border: 2px solid theme('colors.outline-variant');
+            background-color: theme('colors.surface-container-lowest');
+            position: relative;
+        }
+        html.light .id-card {
+             border-color: theme('colors.outline');
+             background-color: theme('colors.light-bg');
+        }
+        
+        .id-card::before, .id-card::after {
+            content: '';
+            position: absolute;
+            width: 8px;
+            height: 8px;
+            border: 1px solid theme('colors.outline-variant');
+        }
+        .id-card::before { top: 4px; left: 4px; border-right: none; border-bottom: none; }
+        .id-card::after { bottom: 4px; right: 4px; border-left: none; border-top: none; }
+        html.light .id-card::before, html.light .id-card::after { border-color: theme('colors.outline'); }
+        
+        .creators-section {
+            display: none;
+        }
+        .creators-section.active {
+            display: grid;
+        }
+    </style>
+</head>
+<body class="antialiased min-h-screen flex flex-col font-body-md text-body-md relative overflow-x-hidden selection:bg-primary-fixed selection:text-on-primary-fixed">
+<!-- JSON TopAppBar -->
+<header class="bg-background dark:bg-background docked full-width top-0 border-b border-outline-variant flat no shadows flex justify-between items-center w-full px-grid-size py-unit sticky z-50">
+<div class="flex items-center gap-8">
+<div class="font-headline-md text-headline-md text-primary-fixed uppercase tracking-tighter hover:bg-surface-variant dark:hover:bg-surface-container-highest transition-all duration-100 p-2 cursor-pointer">
+                DPI_ENGINE_
+            </div>
+<nav class="hidden md:flex gap-6 font-label-code text-label-code">
+<a class="text-primary-fixed border-b-2 border-primary-fixed pb-1 font-bold" href="#" id="nav-live">LIVE FEED</a>
+<a class="text-secondary dark:text-secondary-fixed-dim hover:text-primary-fixed transition-colors" href="#">REPORTS</a>
+<a class="text-secondary dark:text-secondary-fixed-dim hover:text-primary-fixed transition-colors" href="#">RULES</a>
+<a class="text-secondary dark:text-secondary-fixed-dim hover:text-primary-fixed transition-colors" href="#">SETTINGS</a>
+<a class="text-secondary dark:text-secondary-fixed-dim hover:text-primary-fixed transition-colors" href="#" id="nav-creators">CREATORS</a>
+</nav>
+</div>
+<div class="flex items-center gap-6">
+<div class="hidden lg:block font-label-code text-label-code text-on-surface-variant text-right border-r border-outline-variant pr-6">
+<div>SYS_TIME</div>
+<div class="text-primary-fixed">23:47:12</div>
+<div>UTC+0</div>
+</div>
+<div class="flex gap-4 items-center">
+<button class="text-secondary hover:text-primary-fixed transition-colors" id="theme-toggle">
+<span class="material-symbols-outlined text-2xl dark:hidden" id="theme-icon-light">dark_mode</span>
+<span class="material-symbols-outlined text-2xl hidden dark:block" id="theme-icon-dark">light_mode</span>
+</button>
+<button id="btn-upload-header" class="bg-primary-fixed text-on-primary-fixed font-headline-md text-headline-md px-4 py-1 flex items-center gap-2 hover:bg-primary-fixed-dim transition-colors glitch-hover relative overflow-hidden group">
+                    UPLOAD CAPTURE
+                    <span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">upload</span>
+<div class="absolute inset-0 bg-white/20 translate-y-full group-hover:translate-y-0 transition-transform duration-100 ease-in-out"></div>
+</button>
+<button class="text-secondary hover:text-primary-fixed transition-colors">
+<span class="material-symbols-outlined text-2xl">schedule</span>
+</button>
+</div>
+</div>
+</header>
+<main class="flex-grow w-full max-w-[1440px] mx-auto p-gutter md:p-margin-desktop flex flex-col gap-12 relative z-10 border-l border-r border-outline-variant min-h-screen" id="main-content">
+<!-- Crosshairs / structural accents -->
+<div class="absolute top-0 left-0 w-4 h-4 border-t border-l border-primary-fixed/50 -translate-x-1/2 -translate-y-1/2 hidden md:block"></div>
+<div class="absolute top-0 right-0 w-4 h-4 border-t border-r border-primary-fixed/50 translate-x-1/2 -translate-y-1/2 hidden md:block"></div>
+<!-- 1. HERO SECTION -->
+<section class="grid grid-cols-1 lg:grid-cols-12 gap-8 border-b border-outline-variant pb-12 relative" id="section-hero">
+<div class="lg:col-span-6 flex flex-col justify-center gap-6 relative z-10">
+<div class="font-label-code text-label-code text-primary-fixed terminal-block ml-4">
+                    /01 DEEP PACKET INSPECTION
+                </div>
+<div>
+<h1 class="font-display-lg text-display-lg md:text-[120px] text-on-surface uppercase leading-none drop-shadow-[0_0_15px_rgba(255,255,255,0.1)]">
+                        SEE WHAT'S<br/>
+<span class="text-outline">REALLY ON</span><br/>
+                        YOUR WIRE.
+                    </h1>
+</div>
+<p class="font-label-code text-label-code text-on-surface-variant max-w-md uppercase tracking-wider leading-relaxed">
+                    Analyzing network traffic in real time with systematic precision. A raw, digital-first approach for machine-age network security.
+                </p>
+<div class="flex gap-4 pt-4">
+<button id="btn-analyze-hero" class="bg-primary-fixed text-on-primary-fixed font-headline-md text-headline-md px-6 py-2 flex items-center gap-2 hover:bg-primary-fixed-dim transition-colors border-2 border-primary-fixed">
+                        ANALYZE PCAP
+                        <span class="material-symbols-outlined">arrow_outward</span>
+</button>
+<button class="bg-transparent text-primary-fixed border-2 border-primary-fixed font-headline-md text-headline-md px-6 py-2 flex items-center gap-2 hover:bg-primary-fixed/10 transition-colors">
+                        VIEW DOCS
+                        <span class="material-symbols-outlined">docs</span>
+</button>
+</div>
+</div>
+<div class="lg:col-span-6 relative border border-outline-variant bg-surface-container-low min-h-[400px] flex items-center justify-center overflow-hidden group">
+<!-- Tech Graphic / Placeholder -->
+<div class="absolute top-4 left-4 font-label-code text-label-code text-on-surface-variant z-20">
+                    &gt;RENDERING...<br/>
+<span class="text-primary-fixed animate-pulse">87%</span>
+</div>
+<div class="absolute bottom-4 right-4 font-label-code text-label-code text-on-surface-variant z-20">
+                    //SCN_01
+                </div>
+<!-- Glitch/Data Box Overlay -->
+<div class="absolute right-8 top-1/2 -translate-y-1/2 border border-primary-fixed bg-surface-container-highest/80 p-4 font-label-code text-label-code text-primary-fixed z-20 backdrop-blur-sm shadow-[0_0_15px_rgba(195,244,0,0.15)]">
+<div>X_36.1749</div>
+<div>Y_-86.7676</div>
+<div>Z_46.6827</div>
+</div>
+<!-- Replace generic image with placeholder and detailed data-alt -->
+<div class="w-full h-full relative opacity-60 mix-blend-screen group-hover:opacity-100 transition-opacity duration-500">
+<div class="bg-cover bg-center w-full h-full absolute inset-0" data-alt="A highly complex 3D wireframe rendering of a human head or abstract neural network node, composed entirely of glowing green binary code and strict geometric grid lines against a pitch-black background. The style is raw cyber-brutalism, emphasizing technical precision, high contrast, and digital artifacting like scanlines and subtle chromatic aberration. It conveys a sense of advanced machine learning and deep packet network surveillance." style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuD_cdDxJWXNZrajCP5cGiKYylwiT5z_wtBQ22ylECr6R1KD3Rbf8dcahsDQ4KWIrtbTRCuApwGXiNA16SWCLXzU6hsZLQR6_br5iM9CeYILm6XbOYECDxoAi2_BhuCv6HlBQWcC8KccA0kQ7UevMb1ujAU5md45CAaYkU1gq8SWYEsjYtIFzQPcyOFHdgwVbE85hxq54wrbCtUOAysFBM5-i8HLq_VuniRk7tLUZvI4EOP3vm6CrCo8cQ')"></div>
+</div>
+</div>
+</section>
+<!-- 2. CORE STATS -->
+<section class="flex flex-col gap-6 border-b border-outline-variant pb-12" id="section-stats">
+<div class="font-label-code text-label-code text-primary-fixed terminal-block ml-4 border-b border-outline-variant pb-2 inline-block self-start">
+                /02 LIVE STATISTICS
+            </div>
+<div class="grid grid-cols-2 md:grid-cols-5 gap-px bg-outline-variant border border-outline-variant">
+<!-- Stat Box 1 -->
+<div class="bg-surface-container-low p-6 flex flex-col gap-4 hover:bg-surface-container-high transition-colors group">
+<div class="flex justify-between items-start text-on-surface-variant">
+<span class="material-symbols-outlined">data_usage</span>
+<span class="text-[10px] font-label-code">+</span>
+</div>
+<div>
+<div class="font-label-code text-label-code text-on-surface-variant uppercase mb-1">TOTAL PACKETS</div>
+<div id="stat-total-packets" class="font-headline-lg text-headline-lg text-primary-fixed group-hover:translate-x-1 transition-transform">—</div>
+</div>
+</div>
+<!-- Stat Box 2 -->
+<div class="bg-surface-container-low p-6 flex flex-col gap-4 hover:bg-surface-container-high transition-colors group">
+<div class="flex justify-between items-start text-on-surface-variant">
+<span class="material-symbols-outlined">forward</span>
+<span class="text-[10px] font-label-code">+</span>
+</div>
+<div>
+<div class="font-label-code text-label-code text-on-surface-variant uppercase mb-1">FORWARDED</div>
+<div id="stat-forwarded" class="font-headline-lg text-headline-lg text-on-surface group-hover:translate-x-1 transition-transform">—</div>
+</div>
+</div>
+<!-- Stat Box 3 -->
+<div class="bg-surface-container-low p-6 flex flex-col gap-4 hover:bg-surface-container-high transition-colors group">
+<div class="flex justify-between items-start text-on-surface-variant">
+<span class="material-symbols-outlined text-error">cancel</span>
+<span class="text-[10px] font-label-code">+</span>
+</div>
+<div>
+<div class="font-label-code text-label-code text-on-surface-variant uppercase mb-1">DROPPED</div>
+<div id="stat-dropped" class="font-headline-lg text-headline-lg text-error group-hover:translate-x-1 transition-transform">—</div>
+</div>
+</div>
+<!-- Stat Box 4 -->
+<div class="bg-surface-container-low p-6 flex flex-col gap-4 hover:bg-surface-container-high transition-colors group">
+<div class="flex justify-between items-start text-on-surface-variant">
+<span class="material-symbols-outlined">timeline</span>
+<span class="text-[10px] font-label-code">+</span>
+</div>
+<div>
+<div class="font-label-code text-label-code text-on-surface-variant uppercase mb-1">ACTIVE FLOWS</div>
+<div id="stat-active-flows" class="font-headline-lg text-headline-lg text-on-surface group-hover:translate-x-1 transition-transform">—</div>
+</div>
+</div>
+<!-- Stat Box 5 -->
+<div class="bg-surface-container-low p-6 flex flex-col gap-4 hover:bg-surface-container-high transition-colors group col-span-2 md:col-span-1">
+<div class="flex justify-between items-start text-on-surface-variant">
+<span class="material-symbols-outlined">memory</span>
+<span class="text-[10px] font-label-code">+</span>
+</div>
+<div>
+<div class="font-label-code text-label-code text-on-surface-variant uppercase mb-1">ENGINE MODE</div>
+<div id="stat-threads" class="font-headline-lg text-headline-lg text-on-surface group-hover:translate-x-1 transition-transform">—</div>
+</div>
+</div>
+</div>
+</section>
+<!-- 3. TRAFFIC GRID & SYSTEM STATUS (Split Layout) -->
+<section class="grid grid-cols-1 lg:grid-cols-12 gap-8" id="section-traffic">
+<!-- TRAFFIC GRID -->
+<div class="lg:col-span-8 flex flex-col gap-6">
+<div class="font-label-code text-label-code text-primary-fixed terminal-block ml-4 border-b border-outline-variant pb-2 inline-block self-start">
+                    /03 CLASSIFIED TRAFFIC
+                </div>
+<div id="traffic-cards-container" class="grid grid-cols-1 md:grid-cols-2 gap-4">
+<!-- Card 1 -->
+<div class="border border-outline-variant bg-surface-container-lowest flex flex-col hover:border-primary-fixed transition-colors group">
+<div class="h-40 bg-surface-container-high p-4 flex flex-col justify-between border-b border-outline-variant relative overflow-hidden">
+<!-- Abstract graphic rep -->
+<div class="absolute inset-0 opacity-20 bg-[radial-gradient(circle_at_center,theme('colors.primary-fixed')_1px,transparent_1px)] bg-[size:10px_10px]"></div>
+<div class="relative z-10 font-headline-lg text-headline-lg text-primary-fixed">42%</div>
+<div class="relative z-10 w-full h-2 bg-background border border-outline"><div class="h-full bg-primary-fixed w-[42%]"></div></div>
+</div>
+<div class="p-4 flex justify-between items-end bg-background">
+<div>
+<div class="font-label-code text-label-code text-primary-fixed mb-1">VID_STREAM</div>
+<div class="font-label-code text-label-code text-on-surface-variant uppercase">YOUTUBE</div>
+</div>
+<span class="material-symbols-outlined text-on-surface-variant group-hover:text-primary-fixed group-hover:translate-x-1 group-hover:-translate-y-1 transition-transform">arrow_outward</span>
+</div>
+</div>
+<!-- Card 2 -->
+<div class="border border-outline-variant bg-surface-container-lowest flex flex-col hover:border-primary-fixed transition-colors group">
+<div class="h-40 bg-surface-container-high p-4 flex flex-col justify-between border-b border-outline-variant relative overflow-hidden">
+<!-- Abstract graphic rep -->
+<div class="absolute inset-0 opacity-10 bg-[linear-gradient(45deg,theme('colors.on-surface')_25%,transparent_25%,transparent_75%,theme('colors.on-surface')_75%,theme('colors.on-surface')_100%)] bg-[size:20px_20px]"></div>
+<div class="relative z-10 font-headline-lg text-headline-lg text-on-surface">28%</div>
+<div class="relative z-10 w-full h-2 bg-background border border-outline"><div class="h-full bg-on-surface w-[28%]"></div></div>
+</div>
+<div class="p-4 flex justify-between items-end bg-background">
+<div>
+<div class="font-label-code text-label-code text-primary-fixed mb-1">SOCIAL_NET</div>
+<div class="font-label-code text-label-code text-on-surface-variant uppercase">FACEBOOK</div>
+</div>
+<span class="material-symbols-outlined text-on-surface-variant group-hover:text-primary-fixed group-hover:translate-x-1 group-hover:-translate-y-1 transition-transform">arrow_outward</span>
+</div>
+</div>
+<!-- Card 3 -->
+<div class="border border-outline-variant bg-surface-container-lowest flex flex-col hover:border-primary-fixed transition-colors group">
+<div class="h-40 bg-surface-container-high p-4 flex flex-col justify-between border-b border-outline-variant relative overflow-hidden">
+<div class="relative z-10 font-headline-lg text-headline-lg text-on-surface">15%</div>
+<div class="relative z-10 w-full h-2 bg-background border border-outline"><div class="h-full bg-on-surface w-[15%]"></div></div>
+</div>
+<div class="p-4 flex justify-between items-end bg-background">
+<div>
+<div class="font-label-code text-label-code text-primary-fixed mb-1">SECURE_WEB</div>
+<div class="font-label-code text-label-code text-on-surface-variant uppercase">HTTPS</div>
+</div>
+<span class="material-symbols-outlined text-on-surface-variant group-hover:text-primary-fixed group-hover:translate-x-1 group-hover:-translate-y-1 transition-transform">arrow_outward</span>
+</div>
+</div>
+<!-- Card 4 -->
+<div class="border border-outline-variant bg-surface-container-lowest flex flex-col hover:border-primary-fixed transition-colors group">
+<div class="h-40 bg-surface-container-high p-4 flex flex-col justify-between border-b border-outline-variant relative overflow-hidden">
+<div class="relative z-10 font-headline-lg text-headline-lg text-on-surface">5%</div>
+<div class="relative z-10 w-full h-2 bg-background border border-outline"><div class="h-full bg-on-surface w-[5%]"></div></div>
+</div>
+<div class="p-4 flex justify-between items-end bg-background">
+<div>
+<div class="font-label-code text-label-code text-primary-fixed mb-1">RESOLUTION</div>
+<div class="font-label-code text-label-code text-on-surface-variant uppercase">DNS</div>
+</div>
+<span class="material-symbols-outlined text-on-surface-variant group-hover:text-primary-fixed group-hover:translate-x-1 group-hover:-translate-y-1 transition-transform">arrow_outward</span>
+</div>
+</div>
+</div>
+</div>
+<!-- SYSTEM STATUS -->
+<div class="lg:col-span-4 flex flex-col gap-6">
+<div class="font-label-code text-label-code text-primary-fixed terminal-block ml-4 border-b border-outline-variant pb-2 inline-block self-start">
+                    /04 ENGINE STATUS
+                </div>
+<div class="border border-outline-variant bg-surface-container-low p-6 font-label-code text-label-code flex flex-col gap-6 h-full">
+<div class="flex flex-col gap-2 border-b border-outline-variant/50 pb-4">
+<div class="flex justify-between text-on-surface-variant">
+<span>CPU_USAGE</span>
+<span class="text-primary-fixed">73%</span>
+</div>
+<div class="flex items-center gap-2 text-primary-fixed">
+<div class="flex-grow flex gap-1 h-2">
+<!-- Block progress bar -->
+<div class="w-full h-full bg-primary-fixed"></div>
+<div class="w-full h-full bg-primary-fixed"></div>
+<div class="w-full h-full bg-primary-fixed"></div>
+<div class="w-full h-full bg-primary-fixed"></div>
+<div class="w-full h-full bg-primary-fixed"></div>
+<div class="w-full h-full bg-primary-fixed"></div>
+<div class="w-full h-full bg-primary-fixed"></div>
+<div class="w-full h-full bg-primary-fixed opacity-20"></div>
+<div class="w-full h-full bg-primary-fixed opacity-20"></div>
+<div class="w-full h-full bg-primary-fixed opacity-20"></div>
+</div>
+</div>
+</div>
+<div class="flex flex-col gap-2 border-b border-outline-variant/50 pb-4">
+<div class="flex justify-between text-on-surface-variant">
+<span>MEMORY</span>
+<span class="text-primary-fixed">8.6 GB / 16 GB</span>
+</div>
+<div class="w-full h-[1px] bg-outline-variant relative">
+<div class="absolute left-0 top-0 h-[1px] bg-primary-fixed w-[53%] shadow-[0_0_5px_rgba(195,244,0,0.8)]"></div>
+</div>
+</div>
+<div class="flex justify-between text-on-surface-variant border-b border-outline-variant/50 pb-4">
+<span>UPTIME</span>
+<span class="text-on-surface">7D 14H 22M</span>
+</div>
+<div class="flex justify-between text-on-surface-variant border-b border-outline-variant/50 pb-4">
+<span>THREAD POOL</span>
+<span class="text-primary-fixed">SECURE</span>
+</div>
+<div class="mt-auto pt-4 border border-primary-fixed/30 bg-primary-fixed/5 text-primary-fixed p-3 text-center border-l-4 border-l-primary-fixed shadow-[inset_0_0_10px_rgba(195,244,0,0.05)]">
+                        ALL SYSTEMS OPERATIONAL
+                    </div>
+</div>
+</div>
+</section>
+<!-- 4. CREATORS SECTION (Hidden by default) -->
+<section class="creators-section grid-cols-1 md:grid-cols-3 gap-8" id="section-creators">
+<div class="md:col-span-3 flex flex-col gap-6">
+<div class="font-label-code text-label-code text-primary-fixed terminal-block ml-4 border-b border-outline-variant pb-2 inline-block self-start">
+            /05 CREATORS
+        </div>
+</div>
+<!-- ID Card 1 -->
+<div class="id-card p-6 flex flex-col gap-6">
+<div class="flex justify-between items-center border-b border-outline-variant pb-2 font-label-code text-label-code text-on-surface-variant">
+<span>DPI_ENGINE / ACCESS: DEV</span>
+<span class="material-symbols-outlined text-sm">badge</span>
+</div>
+<div class="flex flex-col gap-4">
+<div class="h-48 w-full border border-outline-variant relative overflow-hidden bg-surface-container-low group">
+<div class="absolute inset-0 opacity-30 mix-blend-screen bg-cover bg-center" style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuB2FLhjLRBtvSp6MxWXcx7ML6FGBZA0VBz-jVPBb4m5u-8PtLqQb35vMlZFZkRhPebDEnFt2sgKNtMCpzH_AWWsRqOsFCmmtRsUXQ-erGeHlr3A_FbMKjqxzUWkpKuewh2c1uvhQuCt3_grABE1OioJ3oWug2VqRrtLWnevx1mxC6TiqmaRwuYORZoO-vKU1rhufvZiF4h5kqPm-iOHemZNyCjC5nIHCexwyovbclvVE3m4dEU4FgdM4nzC6evDvztwyBY')"></div>
+<div class="absolute inset-0 bg-cover bg-center grayscale group-hover:grayscale-0 transition-all duration-500" style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuBU9g41DdQ_8qjQNBmDeOg2rgf1ty_cNoMHgEG98Gq9hyTfmiMOwPpOfSbBfp-c8GoPU7Cv19zwSHFAa3uuRNbocG43VnIpqumrsTp19xRBXm7kMtheB7xjJMhKNkHgxBE7Dv_wruWCZQDBIe6zMTnW1oUhd39oQeClCxAKS7_1zWsG3HVzv4ViptXulCp3VEWs1oSPB3QC2nL0FkO8qCqO2oCgCVEQtWxcF-PJHNjx_1jfJe3Opbdx5g')"></div>
+</div>
+<div class="font-label-code text-label-code flex flex-col gap-1">
+<div class="text-primary-fixed text-lg font-bold tracking-widest uppercase">MAJED</div>
+<div class="text-on-surface">ROLE: SYSTEMS ENGINEER</div>
+<div class="text-on-surface-variant text-xs mt-2">HASH: build_0x8312</div>
+</div>
+</div>
+<div class="border-t border-outline-variant pt-4 font-label-code text-[10px] leading-tight text-on-surface-variant uppercase text-justify">
+            AUTHORIZED CONTRIBUTORS TO THE DPI_ENGINE TRAFFIC CLASSIFICATION SYSTEM. ALL ACCESS LOGGED.
+        </div>
+<div class="mt-auto border-t border-dashed border-outline-variant pt-2 flex items-center justify-between font-label-code text-[10px] text-on-surface-variant">
+<span>MUFFAKHAM JAH COLLEGE OF ENGINEERING AND TECHNOLOGY / CSE DEPARTMENT</span>
+<span class="material-symbols-outlined text-primary-fixed">verified_user</span>
+</div>
+</div>
+<!-- ID Card 2 -->
+<div class="id-card p-6 flex flex-col gap-6">
+<div class="flex justify-between items-center border-b border-outline-variant pb-2 font-label-code text-label-code text-on-surface-variant">
+<span>DPI_ENGINE / ACCESS: DEV</span>
+<span class="material-symbols-outlined text-sm">badge</span>
+</div>
+<div class="flex flex-col gap-4">
+<div class="h-48 w-full border border-outline-variant relative overflow-hidden bg-surface-container-low group">
+<div class="absolute inset-0 opacity-30 mix-blend-screen bg-cover bg-center" style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuBAhoa92_lJ2-rolmz6QaO7wV3LLY4nkpKGKNeDLKT2ANVREk-iSiGxsR_hZechSNxwcjskJDcpxjSDKJIMzba1VEM95ZSXiRa292bz4vlVf8mni6xAC7WLoDcDh9E_bm90_-_eBKLF6eMGtfJHcxNGPijF5CDbZhZO9Gw_mwSqeRq29luNknuiJTCkmcm5Biwmmv3M709OGv-mOUjCrgBZo4EImItOrlLqHIho80ye9P7Ojs9fPJtA4DhJA-hHCJ_Y7JU')"></div>
+<div class="absolute inset-0 bg-cover bg-center grayscale group-hover:grayscale-0 transition-all duration-500" style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuDwM-5mvrDkGSGqx1QN0SMkw283iJe8PVZJ6BHHPd0BPfLkJ2jgi_T_VyHvtr40HsrnloFqfzVZzKh4iluCubFmUh3ox2jIQo6RfSy5zCpsMH9BOciUz9BYtlUmvnVCrAyoyH5l9E1DRNF-fpAcq5MPR5dciiKyf_51xSiwq9MvDN4yyO78bk21tZYLDmCKCW9BhcrU2S3xs3vABafxZjsRMaDi01AdlGIMzJOr10FDWSoTo2T8_ygOug')"></div>
+</div>
+<div class="font-label-code text-label-code flex flex-col gap-1">
+<div class="text-primary-fixed text-lg font-bold tracking-widest uppercase">ZAID</div>
+<div class="text-on-surface">ROLE: ML ENGINEER</div>
+<div class="text-on-surface-variant text-xs mt-2">HASH: build_0x2973</div>
+</div>
+</div>
+<div class="border-t border-outline-variant pt-4 font-label-code text-[10px] leading-tight text-on-surface-variant uppercase text-justify">
+            AUTHORIZED CONTRIBUTORS TO THE DPI_ENGINE TRAFFIC CLASSIFICATION SYSTEM. ALL ACCESS LOGGED.
+        </div>
+<div class="mt-auto border-t border-dashed border-outline-variant pt-2 flex items-center justify-between font-label-code text-[10px] text-on-surface-variant">
+<span>MUFFAKHAM JAH COLLEGE OF ENGINEERING AND TECHNOLOGY / CSE DEPARTMENT</span>
+<span class="material-symbols-outlined text-primary-fixed">verified_user</span>
+</div>
+</div>
+<!-- ID Card 3 -->
+<div class="id-card p-6 flex flex-col gap-6">
+<div class="flex justify-between items-center border-b border-outline-variant pb-2 font-label-code text-label-code text-on-surface-variant">
+<span>DPI_ENGINE / ACCESS: DEV</span>
+<span class="material-symbols-outlined text-sm">badge</span>
+</div>
+<div class="flex flex-col gap-4">
+<div class="h-48 w-full border border-outline-variant relative overflow-hidden bg-surface-container-low group">
+<div class="absolute inset-0 opacity-30 mix-blend-screen bg-cover bg-center" style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuApeGfhiir5yV6oITr-z0w9fWy3CJjATogXthL3uttv48Fyp9Gpruwn7wO0nB3F4I3hyxEHK4SKCoczjkzoaOEK7Bu7lblcko9Aq2iGoAtFXWtx3GQkrXmOslRGi-iXWjLyi8xzUiR2boFVS2Z518lTOiafNbwin82-C-zt6oUMiLT3HIliB7V28ulzpbUKER4NsWE38TKOebVwu-jRpBYPnaQ_-mdBqcOMGBjouY3G-5OxLu07UuvckeOybcrPPML77tQ')"></div>
+<div class="absolute inset-0 bg-cover bg-center grayscale group-hover:grayscale-0 transition-all duration-500" style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuDY2YjWpBhxAAgGPnzb2iYEq8SRSHCFfXnLGth1bA5ZLdxSyBlldOGd0LipUchTy3Y2L4xxL5km5ZlryRrKblWVok-YnnLi_V6IWCYywNm78aua_KuWbFI2DHKtw6aulpcbH_04VxDoAoIu55ADXg1RbYGdYB4HcOlb0Sl8ceaaVwqTzf4D0COtLL2N0Ku5ABqsG3z5Bq8bNIDUTUktmngZo7RAPQ6B5XqsOeJPCWnpwyTg7EOirhQNeg')"></div>
+</div>
+<div class="font-label-code text-label-code flex flex-col gap-1">
+<div class="text-primary-fixed text-lg font-bold tracking-widest uppercase">MAAZ</div>
+<div class="text-on-surface">ROLE: BACKEND ENGINEER</div>
+<div class="text-on-surface-variant text-xs mt-2">HASH: build_0x1147</div>
+</div>
+</div>
+<div class="border-t border-outline-variant pt-4 font-label-code text-[10px] leading-tight text-on-surface-variant uppercase text-justify">
+            AUTHORIZED CONTRIBUTORS TO THE DPI_ENGINE TRAFFIC CLASSIFICATION SYSTEM. ALL ACCESS LOGGED.
+        </div>
+<div class="mt-auto border-t border-dashed border-outline-variant pt-2 flex items-center justify-between font-label-code text-[10px] text-on-surface-variant">
+<span>MUFFAKHAM JAH COLLEGE OF ENGINEERING AND TECHNOLOGY / CSE DEPARTMENT</span>
+<span class="material-symbols-outlined text-primary-fixed">verified_user</span>
+</div>
+</div>
+</section>
+</main>
+<!-- JSON Footer -->
+<footer class="bg-surface-container-lowest dark:bg-surface-container-lowest font-label-code text-label-code uppercase docked full-width bottom-0 w-full flex flex-col items-center justify-center pt-12 pb-0 gap-8 border-t border-outline-variant mt-12 relative z-20">
+<div class="w-full max-w-[1440px] px-gutter md:px-margin-desktop grid grid-cols-1 md:grid-cols-4 gap-8">
+<div class="col-span-1 md:col-span-2">
+<div class="font-headline-md text-headline-md text-primary-fixed mb-4">
+<span class="material-symbols-outlined text-primary-fixed align-middle mr-2">token</span>
+                    DPI_ENGINE_
+                </div>
+<div class="text-on-surface-variant">
+                    © 2024 DPI_ENGINE_STUDIO // ALL SYSTEMS OPERATIONAL
+                </div>
+</div>
+<div class="flex flex-col gap-2">
+<div class="text-on-surface mb-2 font-bold border-b border-outline-variant pb-1">NAVIGATION</div>
+<a class="text-on-surface-variant hover:text-primary-fixed glitch-hover:translate-x-1 inline-block transition-transform w-fit text-primary-fixed font-bold underline" href="#">LIVE FEED</a>
+<a class="text-on-surface-variant hover:text-primary-fixed glitch-hover:translate-x-1 inline-block transition-transform w-fit" href="#">MANIFESTO</a>
+<a class="text-on-surface-variant hover:text-primary-fixed glitch-hover:translate-x-1 inline-block transition-transform w-fit" href="#">NETWORK_LOGS</a>
+<a class="text-on-surface-variant hover:text-primary-fixed glitch-hover:translate-x-1 inline-block transition-transform w-fit" href="#">SECURITY_PROXIES</a>
+</div>
+<div class="flex flex-col gap-2">
+<div class="text-on-surface mb-2 font-bold border-b border-outline-variant pb-1">GLOBAL NODE</div>
+<div class="text-on-surface-variant flex gap-4">
+<span class="hover:text-primary-fixed cursor-pointer">LON</span>
+<span class="text-primary-fixed">+ NY</span>
+<span class="hover:text-primary-fixed cursor-pointer">+ TYO</span>
+<span class="hover:text-primary-fixed cursor-pointer">+ BER</span>
+</div>
+<!-- Small abstract map placeholder -->
+<div class="w-full h-16 bg-surface-container-high mt-2 relative border border-outline-variant overflow-hidden">
+<div class="bg-cover bg-center w-full h-full opacity-50" data-alt="A highly stylized, minimalist dotted world map in monochrome cyber-brutalist style. The background is dark gray. Landmasses are formed by dense grids of tiny light gray squares. A few specific coordinates like New York, London, and Tokyo are highlighted with bright neon green plus symbols. The aesthetic is raw, technical, and data-driven." data-location="World Map" style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuDV6FcGTqNJScZ-JP5TvdmoxyAYiIG_sEXDrQNGzNNUPqJybetW8RGMtmTXtkdrsO9llLWYxEX2C0kjPiKR_KIiNEDpS1MAQGRH6sIuMuByfRx7MM14BbTZ0v-Z3wMt_gK9SupUJTpfpjDRVcNWNKZRjmenbjf961cAWbBZaPLlJtZKHgtR73wZz7GpTSYFtEV2vGg0NlXWSFlcre68LkMca6Kz8uQpzZE0GH9FUCJ_U0Y2BQCBA-PscQ')"></div>
+</div>
+</div>
+</div>
+<!-- Hazard Stripe Bottom Bar -->
+<div class="w-full h-12 hazard-stripe mt-4 flex items-center justify-center relative shadow-[0_-5px_15px_rgba(195,244,0,0.2)]">
+<div class="bg-background px-4 py-1 border border-primary-fixed font-label-code text-label-code text-primary-fixed tracking-widest z-10">
+                &gt; ANALYSIS COMPLETE_
+            </div>
+</div>
+</footer>
+<script>
+    // Theme Toggle Logic
+    (function() {
+        const themeToggleBtn = document.getElementById('theme-toggle');
+        const htmlElement = document.documentElement;
+        const iconLight = document.getElementById('theme-icon-light');
+        const iconDark = document.getElementById('theme-icon-dark');
+
+        function updateThemeIcons() {
+            const isDark = htmlElement.classList.contains('dark');
+            // In dark mode: show light_mode icon (to switch to light)
+            // In light mode: show dark_mode icon (to switch to dark)
+            if (isDark) {
+                iconLight.style.display = 'none';
+                iconDark.style.display = 'inline-block';
+            } else {
+                iconLight.style.display = 'inline-block';
+                iconDark.style.display = 'none';
+            }
+        }
+
+        themeToggleBtn.addEventListener('click', () => {
+            htmlElement.classList.toggle('dark');
+            htmlElement.classList.toggle('light');
+            updateThemeIcons();
+        });
+
+        // Set initial icon state
+        updateThemeIcons();
+    })();
+
+    // Navigation Logic
+    (function() {
+        const navLive = document.getElementById('nav-live');
+        const navCreators = document.getElementById('nav-creators');
+        
+        const sectionHero = document.getElementById('section-hero');
+        const sectionStats = document.getElementById('section-stats');
+        const sectionTraffic = document.getElementById('section-traffic');
+        const sectionCreators = document.getElementById('section-creators');
+
+        // All nav links in the header
+        const allNavLinks = document.querySelectorAll('header nav a');
+
+        function setActiveNav(activeLink) {
+            allNavLinks.forEach(link => {
+                link.classList.remove('text-primary-fixed', 'border-b-2', 'border-primary-fixed', 'pb-1', 'font-bold');
+                link.classList.add('text-secondary', 'dark:text-secondary-fixed-dim');
+            });
+            activeLink.classList.add('text-primary-fixed', 'border-b-2', 'border-primary-fixed', 'pb-1', 'font-bold');
+            activeLink.classList.remove('text-secondary', 'dark:text-secondary-fixed-dim');
+        }
+
+        function showLiveFeed() {
+            sectionHero.style.display = 'grid';
+            sectionStats.style.display = 'flex';
+            sectionTraffic.style.display = 'grid';
+            sectionCreators.classList.remove('active');
+        }
+
+        function showCreators() {
+            sectionHero.style.display = 'none';
+            sectionStats.style.display = 'none';
+            sectionTraffic.style.display = 'none';
+            sectionCreators.classList.add('active');
+        }
+
+        navLive.addEventListener('click', (e) => {
+            e.preventDefault();
+            setActiveNav(navLive);
+            showLiveFeed();
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        });
+
+        navCreators.addEventListener('click', (e) => {
+            e.preventDefault();
+            setActiveNav(navCreators);
+            showCreators();
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        });
+
+        // REPORTS, RULES, SETTINGS — decorative links, show live feed on click
+        allNavLinks.forEach(link => {
+            if (link !== navLive && link !== navCreators) {
+                link.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    setActiveNav(link);
+                    showLiveFeed();
+                    window.scrollTo({ top: 0, behavior: 'smooth' });
+                });
+            }
+        });
+    })();
+</script>
+<script>
+    // =========================================================================
+    // DPI Engine – Upload → API → Dashboard wiring
+    // =========================================================================
+
+    (function () {
+        // Hidden file input shared by both upload triggers
+        const fileInput = document.createElement('input');
+        fileInput.type = 'file';
+        fileInput.accept = '.pcap,.pcapng,.cap';
+        fileInput.style.display = 'none';
+        document.body.appendChild(fileInput);
+
+        // Both buttons open the same file picker
+        document.getElementById('btn-upload-header').addEventListener('click', () => fileInput.click());
+        document.getElementById('btn-analyze-hero').addEventListener('click', () => fileInput.click());
+
+        fileInput.addEventListener('change', async () => {
+            const file = fileInput.files[0];
+            if (!file) return;
+
+            // Visual feedback while waiting
+            const statEls = {
+                total:  document.getElementById('stat-total-packets'),
+                fwd:    document.getElementById('stat-forwarded'),
+                drop:   document.getElementById('stat-dropped'),
+                flows:  document.getElementById('stat-active-flows'),
+                threads: document.getElementById('stat-threads'),
+            };
+            Object.values(statEls).forEach(el => { if (el) el.textContent = '...'; });
+
+            try {
+                const formData = new FormData();
+                formData.append('file', file);
+
+                const res = await fetch('/api/analyze', {
+                    method: 'POST',
+                    body: formData,
+                });
+                if (!res.ok) throw new Error(`Server returned ${res.status}`);
+                const data = await res.json();
+
+                // ----- 1. Populate stat boxes -----
+                statEls.total.textContent   = data.total_packets.toLocaleString();
+                statEls.fwd.textContent     = data.forwarded.toLocaleString();
+                statEls.drop.textContent    = data.dropped.toLocaleString();
+                statEls.flows.textContent   = data.active_flows.toLocaleString();
+                // C++ engine is single-threaded; show '1' instead of misleading app count
+                statEls.threads.textContent = '1';
+
+                // ----- 2. Build traffic cards -----
+                const container = document.getElementById('traffic-cards-container');
+                container.innerHTML = ''; // clear placeholder cards
+
+                // Pattern backgrounds to cycle through
+                const patterns = [
+                    "bg-[radial-gradient(circle_at_center,theme('colors.primary-fixed')_1px,transparent_1px)] bg-[size:10px_10px]",
+                    "bg-[linear-gradient(45deg,theme('colors.on-surface')_25%,transparent_25%,transparent_75%,theme('colors.on-surface')_75%,theme('colors.on-surface')_100%)] bg-[size:20px_20px]",
+                    "bg-[radial-gradient(circle_at_center,theme('colors.on-surface')_1px,transparent_1px)] bg-[size:8px_8px]",
+                    "bg-[linear-gradient(135deg,theme('colors.primary-fixed')_25%,transparent_25%,transparent_75%,theme('colors.primary-fixed')_75%)] bg-[size:16px_16px]",
+                ];
+
+                // App category labels
+                const categoryMap = {
+                    'HTTPS': 'SECURE_WEB', 'HTTP': 'PLAIN_WEB', 'DNS': 'RESOLUTION',
+                    'YouTube': 'VID_STREAM', 'Facebook': 'SOCIAL_NET', 'Instagram': 'SOCIAL_NET',
+                    'Twitter/X': 'SOCIAL_NET', 'TikTok': 'VID_STREAM', 'Google': 'SEARCH_ENG',
+                    'Spotify': 'AUD_STREAM', 'Discord': 'MESSAGING', 'Telegram': 'MESSAGING',
+                    'Zoom': 'VIDEO_CALL', 'Netflix': 'VID_STREAM', 'Amazon': 'COMMERCE',
+                    'GitHub': 'DEV_TOOLS', 'Apple': 'PLATFORM', 'Cloudflare': 'CDN_INFRA',
+                    'Unknown': 'UNCLASSIFIED',
+                };
+
+                (data.app_breakdown || []).forEach((item, i) => {
+                    const pct = item.percentage.toFixed(1);
+                    const barW = Math.max(2, Math.round(item.percentage));
+                    const pattern = patterns[i % patterns.length];
+                    const category = categoryMap[item.app] || 'TRAFFIC';
+                    const isFirst = i === 0;
+
+                    const card = document.createElement('div');
+                    card.className = 'border border-outline-variant bg-surface-container-lowest flex flex-col hover:border-primary-fixed transition-colors group';
+                    card.innerHTML = `
+                        <div class="h-40 bg-surface-container-high p-4 flex flex-col justify-between border-b border-outline-variant relative overflow-hidden">
+                            <div class="absolute inset-0 opacity-20 ${pattern}"></div>
+                            <div class="relative z-10 font-headline-lg text-headline-lg ${isFirst ? 'text-primary-fixed' : 'text-on-surface'}">${pct}%</div>
+                            <div class="relative z-10 w-full h-2 bg-background border border-outline">
+                                <div class="h-full ${isFirst ? 'bg-primary-fixed' : 'bg-on-surface'}" style="width:${barW}%"></div>
+                            </div>
+                        </div>
+                        <div class="p-4 flex justify-between items-end bg-background">
+                            <div>
+                                <div class="font-label-code text-label-code text-primary-fixed mb-1">${category}</div>
+                                <div class="font-label-code text-label-code text-on-surface-variant uppercase">${item.app} &middot; ${item.count}</div>
+                            </div>
+                            <span class="material-symbols-outlined text-on-surface-variant group-hover:text-primary-fixed group-hover:translate-x-1 group-hover:-translate-y-1 transition-transform">arrow_outward</span>
+                        </div>
+                    `;
+                    container.appendChild(card);
+                });
+
+                // ----- 3. Detected domains card -----
+                if (data.detected_domains && data.detected_domains.length > 0) {
+                    const domainsCard = document.createElement('div');
+                    domainsCard.className = 'border border-outline-variant bg-surface-container-lowest flex flex-col hover:border-primary-fixed transition-colors group md:col-span-2';
+
+                    let domainRows = data.detected_domains.map(d =>
+                        `<div class="flex justify-between items-center py-2 border-b border-outline-variant/50">
+                            <span class="text-on-surface">${d.domain}</span>
+                            <span class="text-primary-fixed">${d.app}</span>
+                        </div>`
+                    ).join('');
+
+                    domainsCard.innerHTML = `
+                        <div class="p-4 border-b border-outline-variant bg-surface-container-high">
+                            <div class="font-label-code text-label-code text-primary-fixed">DETECTED_DOMAINS</div>
+                        </div>
+                        <div class="p-4 font-label-code text-label-code flex flex-col">
+                            ${domainRows}
+                        </div>
+                    `;
+                    container.appendChild(domainsCard);
+                }
+
+            } catch (err) {
+                console.error('Analysis failed:', err);
+                Object.values(statEls).forEach(el => { if (el) el.textContent = 'ERR'; });
+            }
+
+            // Reset so the same file can be re-selected
+            fileInput.value = '';
+        });
+    })();
+</script>
+</body></html>

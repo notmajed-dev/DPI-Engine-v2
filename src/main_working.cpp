@@ -1,6 +1,7 @@
 // Working DPI Engine - Simplified but functional
 #include <iostream>
 #include <fstream>
+#include <sstream>
 #include <unordered_map>
 #include <vector>
 #include <iomanip>
@@ -86,9 +87,11 @@ Options:
   --block-ip <ip>        Block traffic from source IP
   --block-app <app>      Block application (YouTube, Facebook, etc.)
   --block-domain <dom>   Block domain (substring match)
+  --json-output <path>   Write structured JSON report to file
 
 Example:
   )" << prog << R"( capture.pcap filtered.pcap --block-app YouTube --block-ip 192.168.1.50
+  )" << prog << R"( capture.pcap filtered.pcap --json-output report.json
 )";
 }
 
@@ -102,6 +105,7 @@ int main(int argc, char* argv[]) {
     std::string output_file = argv[2];
     
     BlockingRules rules;
+    std::string json_output_path;
     
     // Parse options
     for (int i = 3; i < argc; i++) {
@@ -112,6 +116,8 @@ int main(int argc, char* argv[]) {
             rules.blockApp(argv[++i]);
         } else if (arg == "--block-domain" && i + 1 < argc) {
             rules.blockDomain(argv[++i]);
+        } else if (arg == "--json-output" && i + 1 < argc) {
+            json_output_path = argv[++i];
         }
     }
     
@@ -320,6 +326,70 @@ int main(int argc, char* argv[]) {
     }
     
     std::cout << "\nOutput written to: " << output_file << "\n";
+    
+    // Write JSON report if requested
+    if (!json_output_path.empty()) {
+        std::ofstream json_file(json_output_path);
+        if (!json_file.is_open()) {
+            std::cerr << "Error: Cannot open JSON output file: " << json_output_path << "\n";
+            return 1;
+        }
+        
+        // Helper to escape a string for JSON
+        auto escapeJson = [](const std::string& s) -> std::string {
+            std::string result;
+            result.reserve(s.size());
+            for (char c : s) {
+                switch (c) {
+                    case '"':  result += "\\\""; break;
+                    case '\\': result += "\\\\"; break;
+                    case '\n': result += "\\n"; break;
+                    case '\r': result += "\\r"; break;
+                    case '\t': result += "\\t"; break;
+                    default:   result += c; break;
+                }
+            }
+            return result;
+        };
+        
+        std::ostringstream js;
+        js << "{\n";
+        js << "  \"total_packets\": " << total_packets << ",\n";
+        js << "  \"forwarded\": " << forwarded << ",\n";
+        js << "  \"dropped\": " << dropped << ",\n";
+        js << "  \"active_flows\": " << flows.size() << ",\n";
+        
+        // app_breakdown array
+        js << "  \"app_breakdown\": [\n";
+        for (size_t idx = 0; idx < sorted_apps.size(); idx++) {
+            const auto& [app, count] = sorted_apps[idx];
+            double pct = total_packets > 0 ? (100.0 * count / total_packets) : 0.0;
+            js << "    {\"app\": \"" << escapeJson(appTypeToString(app)) << "\", "
+               << "\"count\": " << count << ", "
+               << "\"percentage\": " << std::fixed << std::setprecision(2) << pct << "}";
+            if (idx + 1 < sorted_apps.size()) js << ",";
+            js << "\n";
+        }
+        js << "  ],\n";
+        
+        // detected_domains array
+        js << "  \"detected_domains\": [\n";
+        size_t dom_idx = 0;
+        for (const auto& [sni, app] : unique_snis) {
+            js << "    {\"domain\": \"" << escapeJson(sni) << "\", "
+               << "\"app\": \"" << escapeJson(appTypeToString(app)) << "\"}";
+            if (dom_idx + 1 < unique_snis.size()) js << ",";
+            js << "\n";
+            dom_idx++;
+        }
+        js << "  ]\n";
+        
+        js << "}\n";
+        
+        json_file << js.str();
+        json_file.close();
+        std::cout << "JSON report written to: " << json_output_path << "\n";
+    }
     
     return 0;
 }
