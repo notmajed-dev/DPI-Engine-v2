@@ -121,14 +121,26 @@
                 linear-gradient(90deg, theme('colors.secondary-fixed-dim') 1px, transparent 1px);
         }
 
-        html.light .bg-background { background-color: theme('colors.light-bg'); }
-        html.light .text-on-surface { color: theme('colors.light-text'); }
-        html.light .bg-surface-container-low { background-color: theme('colors.tertiary-container'); }
-        html.light .bg-surface-container-lowest { background-color: theme('colors.secondary-fixed'); }
-        html.light .bg-surface-container-highest { background-color: theme('colors.secondary-fixed-dim'); }
-        html.light .text-on-surface-variant { color: theme('colors.on-secondary-fixed'); }
-        html.light .border-outline-variant { border-color: theme('colors.outline'); }
-        html.light .bg-surface-container-high { background-color: theme('colors.secondary'); }
+        /* ── Light mode: backgrounds ── */
+        html.light .bg-background { background-color: #F5F5F0; }
+        html.light .bg-surface-container-low { background-color: #eae8e6; }
+        html.light .bg-surface-container-lowest { background-color: #f0eeec; }
+        html.light .bg-surface-container-highest { background-color: #dddbd9; }
+        html.light .bg-surface-container-high { background-color: #e0dedc; }
+        html.light .bg-surface-container { background-color: #e5e3e1; }
+        html.light .bg-outline-variant { background-color: #c0c0b8; }
+
+        /* ── Light mode: text – black body copy, dark-green accents ── */
+        html.light .text-on-surface { color: #121414; }
+        html.light .text-on-surface-variant { color: #3a3a3a; }
+        html.light .text-primary-fixed { color: #3c5a00; }
+        html.light .text-secondary { color: #555; }
+        html.light .text-error { color: #ba1a1a; }
+
+        /* ── Light mode: borders ── */
+        html.light .border-outline-variant { border-color: #8e9379; }
+        html.light .border-primary-fixed { border-color: #6a8f00; }
+        html.light .border-outline { border-color: #b0b0a8; }
 
         
         .hazard-stripe {
@@ -189,12 +201,22 @@
         .id-card::after { bottom: 4px; right: 4px; border-left: none; border-top: none; }
         html.light .id-card::before, html.light .id-card::after { border-color: theme('colors.outline'); }
         
-        .creators-section {
-            display: none;
+        .creators-section { display: none; }
+        .creators-section.active { display: grid; }
+        .docs-section { display: none; }
+        .docs-section.active { display: flex; }
+        .panel-section { display: none; }
+        .panel-section.active { display: flex; }
+
+        /* Mobile nav slide-in */
+        .mobile-nav-panel {
+            transform: translateX(100%);
+            transition: transform 0.3s ease;
         }
-        .creators-section.active {
-            display: grid;
+        #mobile-nav.open .mobile-nav-panel {
+            transform: translateX(0);
         }
+        #mobile-nav.open { display: block !important; }
     </style>
 </head>
 <body class="antialiased min-h-screen flex flex-col font-body-md text-body-md relative overflow-x-hidden selection:bg-primary-fixed selection:text-on-primary-fixed">
@@ -204,24 +226,28 @@
 <div class="font-headline-md text-headline-md text-primary-fixed uppercase tracking-tighter hover:bg-surface-variant dark:hover:bg-surface-container-highest transition-all duration-100 p-2 cursor-pointer">
                 DPI_ENGINE_
             </div>
-<nav class="hidden md:flex gap-6 font-label-code text-label-code">
+<button class="md:hidden text-on-surface-variant hover:text-primary-fixed transition-colors" id="hamburger-btn">
+<span class="material-symbols-outlined text-2xl">menu</span>
+</button>
+<nav class="hidden md:flex gap-6 font-label-code text-label-code" id="desktop-nav">
 <a class="text-primary-fixed border-b-2 border-primary-fixed pb-1 font-bold" href="#" id="nav-live">LIVE FEED</a>
-<a class="text-secondary dark:text-secondary-fixed-dim hover:text-primary-fixed transition-colors" href="#">REPORTS</a>
-<a class="text-secondary dark:text-secondary-fixed-dim hover:text-primary-fixed transition-colors" href="#">RULES</a>
-<a class="text-secondary dark:text-secondary-fixed-dim hover:text-primary-fixed transition-colors" href="#">SETTINGS</a>
-<a class="text-secondary dark:text-secondary-fixed-dim hover:text-primary-fixed transition-colors" href="#" id="nav-creators">CREATORS</a>
+<a class="text-secondary hover:text-primary-fixed transition-colors" href="#" id="nav-docs">VIEW DOCS</a>
+<a class="text-secondary hover:text-primary-fixed transition-colors" href="#" id="nav-reports">REPORTS</a>
+<a class="text-secondary hover:text-primary-fixed transition-colors" href="#" id="nav-rules">RULES</a>
+<a class="text-secondary hover:text-primary-fixed transition-colors" href="#" id="nav-settings">SETTINGS</a>
+<a class="text-secondary hover:text-primary-fixed transition-colors" href="#" id="nav-creators">CREATORS</a>
 </nav>
 </div>
 <div class="flex items-center gap-6">
 <div class="hidden lg:block font-label-code text-label-code text-on-surface-variant text-right border-r border-outline-variant pr-6">
 <div>SYS_TIME</div>
-<div class="text-primary-fixed">23:47:12</div>
-<div>UTC+0</div>
+<div class="text-primary-fixed" id="sys-time-value">--:--:--</div>
+<div id="sys-time-zone">IST</div>
 </div>
 <div class="flex gap-4 items-center">
 <button class="text-secondary hover:text-primary-fixed transition-colors" id="theme-toggle">
-<span class="material-symbols-outlined text-2xl dark:hidden" id="theme-icon-light">dark_mode</span>
-<span class="material-symbols-outlined text-2xl hidden dark:block" id="theme-icon-dark">light_mode</span>
+<span class="material-symbols-outlined text-2xl" id="theme-icon-light">dark_mode</span>
+<span class="material-symbols-outlined text-2xl" id="theme-icon-dark" style="display:none">light_mode</span>
 </button>
 <button id="btn-upload-header" class="bg-primary-fixed text-on-primary-fixed font-headline-md text-headline-md px-4 py-1 flex items-center gap-2 hover:bg-primary-fixed-dim transition-colors glitch-hover relative overflow-hidden group">
                     UPLOAD CAPTURE
@@ -234,6 +260,24 @@
 </div>
 </div>
 </header>
+<!-- Mobile Nav Overlay -->
+<div id="mobile-nav" class="fixed inset-0 z-[60] hidden">
+<div class="absolute inset-0 bg-black/60" id="mobile-nav-backdrop"></div>
+<div class="mobile-nav-panel absolute top-0 right-0 w-72 h-full bg-surface-container-lowest border-l border-outline-variant p-6 flex flex-col gap-2 overflow-y-auto">
+<div class="flex justify-between items-center mb-4 border-b border-outline-variant pb-4">
+<div class="font-headline-md text-headline-md text-primary-fixed">MENU</div>
+<button id="mobile-nav-close" class="text-on-surface-variant hover:text-primary-fixed">
+<span class="material-symbols-outlined text-2xl">close</span>
+</button>
+</div>
+<a href="#" class="mobile-nav-link text-on-surface font-label-code text-label-code uppercase py-3 border-b border-outline-variant/50 hover:text-primary-fixed transition-colors" data-target="live">LIVE FEED</a>
+<a href="#" class="mobile-nav-link text-on-surface font-label-code text-label-code uppercase py-3 border-b border-outline-variant/50 hover:text-primary-fixed transition-colors" data-target="docs">VIEW DOCS</a>
+<a href="#" class="mobile-nav-link text-on-surface font-label-code text-label-code uppercase py-3 border-b border-outline-variant/50 hover:text-primary-fixed transition-colors" data-target="reports">REPORTS</a>
+<a href="#" class="mobile-nav-link text-on-surface font-label-code text-label-code uppercase py-3 border-b border-outline-variant/50 hover:text-primary-fixed transition-colors" data-target="rules">RULES</a>
+<a href="#" class="mobile-nav-link text-on-surface font-label-code text-label-code uppercase py-3 border-b border-outline-variant/50 hover:text-primary-fixed transition-colors" data-target="settings">SETTINGS</a>
+<a href="#" class="mobile-nav-link text-on-surface font-label-code text-label-code uppercase py-3 hover:text-primary-fixed transition-colors" data-target="creators">CREATORS</a>
+</div>
+</div>
 <main class="flex-grow w-full max-w-[1440px] mx-auto p-gutter md:p-margin-desktop flex flex-col gap-12 relative z-10 border-l border-r border-outline-variant min-h-screen" id="main-content">
 <!-- Crosshairs / structural accents -->
 <div class="absolute top-0 left-0 w-4 h-4 border-t border-l border-primary-fixed/50 -translate-x-1/2 -translate-y-1/2 hidden md:block"></div>
@@ -259,7 +303,7 @@
                         ANALYZE PCAP
                         <span class="material-symbols-outlined">arrow_outward</span>
 </button>
-<button class="bg-transparent text-primary-fixed border-2 border-primary-fixed font-headline-md text-headline-md px-6 py-2 flex items-center gap-2 hover:bg-primary-fixed/10 transition-colors">
+<button id="btn-view-docs" class="bg-transparent text-primary-fixed border-2 border-primary-fixed font-headline-md text-headline-md px-6 py-2 flex items-center gap-2 hover:bg-primary-fixed/10 transition-colors">
                         VIEW DOCS
                         <span class="material-symbols-outlined">docs</span>
 </button>
@@ -552,6 +596,214 @@
 </div>
 </div>
 </section>
+<!-- 5. DOCS SECTION (Hidden by default) -->
+<section class="docs-section flex-col gap-8" id="section-docs">
+    <div class="flex flex-col gap-6">
+        <div class="font-label-code text-label-code text-primary-fixed terminal-block ml-4 border-b border-outline-variant pb-2 inline-block self-start">
+            /00 DOCUMENTATION
+        </div>
+    </div>
+    <!-- What is DPI Engine -->
+    <div class="border border-outline-variant bg-surface-container-lowest">
+        <div class="flex items-center gap-3 p-4 border-b border-outline-variant bg-surface-container-high">
+            <span class="material-symbols-outlined text-primary-fixed">info</span>
+            <div class="font-label-code text-label-code text-primary-fixed uppercase tracking-widest">WHAT IS DPI_ENGINE?</div>
+        </div>
+        <div class="p-6 font-label-code text-label-code text-on-surface-variant leading-relaxed flex flex-col gap-3">
+            <p>DPI_ENGINE is a Deep Packet Inspection analysis tool. It intercepts and classifies network traffic captured in PCAP files, identifying application protocols, counting packet flows, and mapping detected domains — all using a high-performance C++ processing engine.</p>
+            <p class="text-primary-fixed">// COMPILED FROM C++ SOURCE // SINGLE-THREADED PIPELINE // ZERO EXTERNAL DEPENDENCIES //</p>
+        </div>
+    </div>
+    <!-- How to use -->
+    <div class="border border-outline-variant bg-surface-container-lowest">
+        <div class="flex items-center gap-3 p-4 border-b border-outline-variant bg-surface-container-high">
+            <span class="material-symbols-outlined text-primary-fixed">terminal</span>
+            <div class="font-label-code text-label-code text-primary-fixed uppercase tracking-widest">HOW TO USE</div>
+        </div>
+        <div class="p-6 font-label-code text-label-code flex flex-col gap-4">
+            <div class="flex items-start gap-4 border-b border-outline-variant/50 pb-4">
+                <div class="text-primary-fixed font-bold text-xl min-w-[2rem]">01</div>
+                <div>
+                    <div class="text-on-surface uppercase mb-1">UPLOAD A PCAP FILE</div>
+                    <div class="text-on-surface-variant">Click "UPLOAD CAPTURE" in the top-right or "ANALYZE PCAP" on the landing page. Select a valid .pcap, .pcapng, or .cap file captured from your network interface (e.g. via Wireshark or tcpdump).</div>
+                </div>
+            </div>
+            <div class="flex items-start gap-4 border-b border-outline-variant/50 pb-4">
+                <div class="text-primary-fixed font-bold text-xl min-w-[2rem]">02</div>
+                <div>
+                    <div class="text-on-surface uppercase mb-1">WAIT FOR ANALYSIS</div>
+                    <div class="text-on-surface-variant">The C++ DPI engine processes the capture file, classifying each packet by protocol and application. Large files may take a few seconds. All stats update automatically.</div>
+                </div>
+            </div>
+            <div class="flex items-start gap-4">
+                <div class="text-primary-fixed font-bold text-xl min-w-[2rem]">03</div>
+                <div>
+                    <div class="text-on-surface uppercase mb-1">READ THE DASHBOARD</div>
+                    <div class="text-on-surface-variant">All four dashboard sections update with real data from your PCAP. Switch to LIVE FEED in the nav to view results. See the section guide below for details.</div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- Dashboard section guide -->
+    <div class="border border-outline-variant bg-surface-container-lowest">
+        <div class="flex items-center gap-3 p-4 border-b border-outline-variant bg-surface-container-high">
+            <span class="material-symbols-outlined text-primary-fixed">dashboard</span>
+            <div class="font-label-code text-label-code text-primary-fixed uppercase tracking-widest">DASHBOARD SECTIONS EXPLAINED</div>
+        </div>
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-px bg-outline-variant">
+            <div class="p-5 bg-surface-container-lowest flex flex-col gap-2">
+                <div class="flex items-center gap-2 font-label-code text-label-code">
+                    <span class="material-symbols-outlined text-primary-fixed text-sm">bar_chart</span>
+                    <span class="text-primary-fixed">/02 LIVE STATISTICS</span>
+                </div>
+                <div class="font-label-code text-[11px] text-on-surface-variant leading-relaxed">
+                    Five key metrics extracted directly from the PCAP: total packets processed, forwarded count, dropped count, active flow sessions, and engine mode. All values are real — zero synthetic data.
+                </div>
+            </div>
+            <div class="p-5 bg-surface-container-lowest flex flex-col gap-2">
+                <div class="flex items-center gap-2 font-label-code text-label-code">
+                    <span class="material-symbols-outlined text-primary-fixed text-sm">category</span>
+                    <span class="text-primary-fixed">/03 CLASSIFIED TRAFFIC</span>
+                </div>
+                <div class="font-label-code text-[11px] text-on-surface-variant leading-relaxed">
+                    Each detected application protocol (YouTube, HTTPS, DNS, etc.) appears as a card showing its share of total traffic as a percentage bar. The top application is highlighted in neon-green.
+                </div>
+            </div>
+            <div class="p-5 bg-surface-container-lowest flex flex-col gap-2">
+                <div class="flex items-center gap-2 font-label-code text-label-code">
+                    <span class="material-symbols-outlined text-primary-fixed text-sm">language</span>
+                    <span class="text-primary-fixed">DETECTED DOMAINS</span>
+                </div>
+                <div class="font-label-code text-[11px] text-on-surface-variant leading-relaxed">
+                    Domains resolved or contacted during the capture session, mapped to their application category. Extracted from DNS queries and SNI fields in TLS handshakes.
+                </div>
+            </div>
+            <div class="p-5 bg-surface-container-lowest flex flex-col gap-2">
+                <div class="flex items-center gap-2 font-label-code text-label-code">
+                    <span class="material-symbols-outlined text-primary-fixed text-sm">memory</span>
+                    <span class="text-primary-fixed">/04 ENGINE STATUS</span>
+                </div>
+                <div class="font-label-code text-[11px] text-on-surface-variant leading-relaxed">
+                    Real-time display of engine health indicators: CPU usage, memory consumption, uptime, and thread pool state. ENGINE MODE shows the processing architecture (single-threaded pipeline).
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- Back button -->
+    <div class="border-t border-outline-variant pt-4">
+        <button id="docs-back-btn" class="bg-primary-fixed text-on-primary-fixed font-headline-md text-headline-md px-6 py-2 flex items-center gap-2 hover:bg-primary-fixed-dim transition-colors">
+            <span class="material-symbols-outlined">arrow_back</span>
+            BACK TO LIVE FEED
+        </button>
+    </div>
+</section>
+<!-- 6. REPORTS SECTION -->
+<section class="panel-section flex-col gap-8" id="section-reports">
+    <div class="flex flex-col gap-6">
+        <div class="font-label-code text-label-code text-primary-fixed terminal-block ml-4 border-b border-outline-variant pb-2 inline-block self-start">/06 REPORTS</div>
+    </div>
+    <div class="border border-outline-variant bg-surface-container-lowest">
+        <div class="flex items-center gap-3 p-4 border-b border-outline-variant bg-surface-container-high">
+            <span class="material-symbols-outlined text-primary-fixed">assessment</span>
+            <div class="font-label-code text-label-code text-primary-fixed uppercase tracking-widest">ANALYSIS REPORT</div>
+        </div>
+        <div id="reports-content" class="p-6 font-label-code text-label-code text-on-surface-variant leading-relaxed">
+            <div class="flex items-center gap-3 py-8 justify-center">
+                <span class="material-symbols-outlined text-2xl">cloud_upload</span>
+                <span>Upload a capture file to generate a report.</span>
+            </div>
+        </div>
+    </div>
+    <div class="border-t border-outline-variant pt-4">
+        <button class="reports-back-btn bg-primary-fixed text-on-primary-fixed font-headline-md text-headline-md px-6 py-2 flex items-center gap-2 hover:bg-primary-fixed-dim transition-colors">
+            <span class="material-symbols-outlined">arrow_back</span> BACK TO LIVE FEED
+        </button>
+    </div>
+</section>
+<!-- 7. RULES SECTION -->
+<section class="panel-section flex-col gap-8" id="section-rules">
+    <div class="flex flex-col gap-6">
+        <div class="font-label-code text-label-code text-primary-fixed terminal-block ml-4 border-b border-outline-variant pb-2 inline-block self-start">/07 RULES</div>
+    </div>
+    <div class="border border-outline-variant bg-surface-container-lowest">
+        <div class="flex items-center gap-3 p-4 border-b border-outline-variant bg-surface-container-high">
+            <span class="material-symbols-outlined text-primary-fixed">shield</span>
+            <div class="font-label-code text-label-code text-primary-fixed uppercase tracking-widest">BLOCKING RULES</div>
+        </div>
+        <div class="p-6 font-label-code text-label-code flex flex-col gap-4">
+            <div class="flex items-start gap-4 border-b border-outline-variant/50 pb-4">
+                <span class="material-symbols-outlined text-primary-fixed min-w-[24px]">block</span>
+                <div>
+                    <div class="text-on-surface uppercase mb-1">IP BLOCKING</div>
+                    <div class="text-on-surface-variant">Block traffic from specific source or destination IP addresses. Supports CIDR notation (e.g. 192.168.1.0/24) and individual addresses. Matched packets are dropped before classification.</div>
+                </div>
+            </div>
+            <div class="flex items-start gap-4 border-b border-outline-variant/50 pb-4">
+                <span class="material-symbols-outlined text-primary-fixed min-w-[24px]">apps</span>
+                <div>
+                    <div class="text-on-surface uppercase mb-1">APPLICATION BLOCKING</div>
+                    <div class="text-on-surface-variant">Block all traffic classified under a specific application protocol (e.g. YouTube, TikTok, Facebook). Uses DPI signatures to match and drop matching flows.</div>
+                </div>
+            </div>
+            <div class="flex items-start gap-4">
+                <span class="material-symbols-outlined text-primary-fixed min-w-[24px]">language</span>
+                <div>
+                    <div class="text-on-surface uppercase mb-1">DOMAIN BLOCKING</div>
+                    <div class="text-on-surface-variant">Block traffic to specific domains detected via DNS queries or TLS SNI fields. Wildcard patterns supported (e.g. *.example.com). Blocks both the DNS resolution and subsequent connections.</div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="border border-outline-variant bg-surface-container-lowest mt-2">
+        <div class="flex items-center gap-3 p-4 border-b border-outline-variant bg-surface-container-high">
+            <span class="material-symbols-outlined text-primary-fixed">info</span>
+            <div class="font-label-code text-label-code text-primary-fixed uppercase tracking-widest">NOTE</div>
+        </div>
+        <div class="p-6 font-label-code text-label-code text-on-surface-variant leading-relaxed">
+            Rules configuration is currently managed through the C++ engine's configuration files. A web-based rule editor will be available in a future release.
+        </div>
+    </div>
+    <div class="border-t border-outline-variant pt-4">
+        <button class="rules-back-btn bg-primary-fixed text-on-primary-fixed font-headline-md text-headline-md px-6 py-2 flex items-center gap-2 hover:bg-primary-fixed-dim transition-colors">
+            <span class="material-symbols-outlined">arrow_back</span> BACK TO LIVE FEED
+        </button>
+    </div>
+</section>
+<!-- 8. SETTINGS SECTION -->
+<section class="panel-section flex-col gap-8" id="section-settings">
+    <div class="flex flex-col gap-6">
+        <div class="font-label-code text-label-code text-primary-fixed terminal-block ml-4 border-b border-outline-variant pb-2 inline-block self-start">/08 SETTINGS</div>
+    </div>
+    <div class="border border-outline-variant bg-surface-container-lowest">
+        <div class="flex items-center gap-3 p-4 border-b border-outline-variant bg-surface-container-high">
+            <span class="material-symbols-outlined text-primary-fixed">settings</span>
+            <div class="font-label-code text-label-code text-primary-fixed uppercase tracking-widest">ENGINE CONFIGURATION</div>
+        </div>
+        <div class="p-6 font-label-code text-label-code flex flex-col gap-4">
+            <div class="flex justify-between items-center border-b border-outline-variant/50 pb-4">
+                <div><div class="text-on-surface uppercase">THEME</div><div class="text-on-surface-variant text-[11px]">Toggle between dark and light modes</div></div>
+                <button id="settings-theme-toggle" class="border border-primary-fixed text-primary-fixed px-3 py-1 hover:bg-primary-fixed/10 transition-colors">TOGGLE</button>
+            </div>
+            <div class="flex justify-between items-center border-b border-outline-variant/50 pb-4">
+                <div><div class="text-on-surface uppercase">ANALYSIS TIMEOUT</div><div class="text-on-surface-variant text-[11px]">Maximum seconds for engine to process a capture</div></div>
+                <div class="text-primary-fixed">30s</div>
+            </div>
+            <div class="flex justify-between items-center border-b border-outline-variant/50 pb-4">
+                <div><div class="text-on-surface uppercase">ENGINE MODE</div><div class="text-on-surface-variant text-[11px]">Processing architecture</div></div>
+                <div class="text-primary-fixed">SINGLE-THREAD</div>
+            </div>
+            <div class="flex justify-between items-center">
+                <div><div class="text-on-surface uppercase">VERSION</div><div class="text-on-surface-variant text-[11px]">DPI Engine build version</div></div>
+                <div class="text-primary-fixed">v2.0.0</div>
+            </div>
+        </div>
+    </div>
+    <div class="border-t border-outline-variant pt-4">
+        <button class="settings-back-btn bg-primary-fixed text-on-primary-fixed font-headline-md text-headline-md px-6 py-2 flex items-center gap-2 hover:bg-primary-fixed-dim transition-colors">
+            <span class="material-symbols-outlined">arrow_back</span> BACK TO LIVE FEED
+        </button>
+    </div>
+</section>
 </main>
 <!-- JSON Footer -->
 <footer class="bg-surface-container-lowest dark:bg-surface-container-lowest font-label-code text-label-code uppercase docked full-width bottom-0 w-full flex flex-col items-center justify-center pt-12 pb-0 gap-8 border-t border-outline-variant mt-12 relative z-20">
@@ -567,10 +819,10 @@
 </div>
 <div class="flex flex-col gap-2">
 <div class="text-on-surface mb-2 font-bold border-b border-outline-variant pb-1">NAVIGATION</div>
-<a class="text-on-surface-variant hover:text-primary-fixed glitch-hover:translate-x-1 inline-block transition-transform w-fit text-primary-fixed font-bold underline" href="#">LIVE FEED</a>
-<a class="text-on-surface-variant hover:text-primary-fixed glitch-hover:translate-x-1 inline-block transition-transform w-fit" href="#">MANIFESTO</a>
-<a class="text-on-surface-variant hover:text-primary-fixed glitch-hover:translate-x-1 inline-block transition-transform w-fit" href="#">NETWORK_LOGS</a>
-<a class="text-on-surface-variant hover:text-primary-fixed glitch-hover:translate-x-1 inline-block transition-transform w-fit" href="#">SECURITY_PROXIES</a>
+<a class="text-primary-fixed font-bold inline-block w-fit cursor-pointer hover:translate-x-1 transition-transform" href="#" id="footer-live-feed">LIVE FEED</a>
+<span class="text-on-surface-variant inline-block w-fit opacity-50 cursor-default">MANIFESTO</span>
+<span class="text-on-surface-variant inline-block w-fit opacity-50 cursor-default">NETWORK_LOGS</span>
+<span class="text-on-surface-variant inline-block w-fit opacity-50 cursor-default">SECURITY_PROXIES</span>
 </div>
 <div class="flex flex-col gap-2">
 <div class="text-on-surface mb-2 font-bold border-b border-outline-variant pb-1">GLOBAL NODE</div>
@@ -626,64 +878,125 @@
 
     // Navigation Logic
     (function() {
-        const navLive = document.getElementById('nav-live');
-        const navCreators = document.getElementById('nav-creators');
-        
-        const sectionHero = document.getElementById('section-hero');
-        const sectionStats = document.getElementById('section-stats');
-        const sectionTraffic = document.getElementById('section-traffic');
-        const sectionCreators = document.getElementById('section-creators');
+        var navLive = document.getElementById('nav-live');
+        var navDocs = document.getElementById('nav-docs');
+        var navReports = document.getElementById('nav-reports');
+        var navRules = document.getElementById('nav-rules');
+        var navSettings = document.getElementById('nav-settings');
+        var navCreators = document.getElementById('nav-creators');
+        var btnViewDocs = document.getElementById('btn-view-docs');
 
-        // All nav links in the header
-        const allNavLinks = document.querySelectorAll('header nav a');
+        var sectionHero = document.getElementById('section-hero');
+        var sectionStats = document.getElementById('section-stats');
+        var sectionTraffic = document.getElementById('section-traffic');
+        var sectionCreators = document.getElementById('section-creators');
+        var sectionDocs = document.getElementById('section-docs');
+        var sectionReports = document.getElementById('section-reports');
+        var sectionRules = document.getElementById('section-rules');
+        var sectionSettings = document.getElementById('section-settings');
 
-        function setActiveNav(activeLink) {
-            allNavLinks.forEach(link => {
-                link.classList.remove('text-primary-fixed', 'border-b-2', 'border-primary-fixed', 'pb-1', 'font-bold');
-                link.classList.add('text-secondary', 'dark:text-secondary-fixed-dim');
+        var allNavLinks = document.querySelectorAll('#desktop-nav a');
+        var panels = [sectionCreators, sectionDocs, sectionReports, sectionRules, sectionSettings];
+
+        function setActiveNav(link) {
+            allNavLinks.forEach(function(l) {
+                l.classList.remove('text-primary-fixed', 'border-b-2', 'border-primary-fixed', 'pb-1', 'font-bold');
+                l.classList.add('text-secondary');
             });
-            activeLink.classList.add('text-primary-fixed', 'border-b-2', 'border-primary-fixed', 'pb-1', 'font-bold');
-            activeLink.classList.remove('text-secondary', 'dark:text-secondary-fixed-dim');
+            if (link) {
+                link.classList.add('text-primary-fixed', 'border-b-2', 'border-primary-fixed', 'pb-1', 'font-bold');
+                link.classList.remove('text-secondary');
+            }
+        }
+
+        function hideAll() {
+            [sectionHero, sectionStats, sectionTraffic].forEach(function(s) { s.style.display = 'none'; });
+            panels.forEach(function(p) { p.classList.remove('active'); });
         }
 
         function showLiveFeed() {
+            hideAll();
             sectionHero.style.display = 'grid';
             sectionStats.style.display = 'flex';
             sectionTraffic.style.display = 'grid';
-            sectionCreators.classList.remove('active');
         }
 
-        function showCreators() {
-            sectionHero.style.display = 'none';
-            sectionStats.style.display = 'none';
-            sectionTraffic.style.display = 'none';
-            sectionCreators.classList.add('active');
+        function navigateTo(navLink, panel) {
+            setActiveNav(navLink);
+            if (panel) { hideAll(); panel.classList.add('active'); }
+            else showLiveFeed();
+            closeMobileNav();
+            window.scrollTo({ top: 0, behavior: 'smooth' });
         }
 
-        navLive.addEventListener('click', (e) => {
-            e.preventDefault();
-            setActiveNav(navLive);
-            showLiveFeed();
-            window.scrollTo({ top: 0, behavior: 'smooth' });
+        // Desktop nav handlers
+        navLive.addEventListener('click', function(e) { e.preventDefault(); navigateTo(navLive, null); });
+        navDocs.addEventListener('click', function(e) { e.preventDefault(); navigateTo(navDocs, sectionDocs); });
+        navReports.addEventListener('click', function(e) { e.preventDefault(); updateReportsContent(); navigateTo(navReports, sectionReports); });
+        navRules.addEventListener('click', function(e) { e.preventDefault(); navigateTo(navRules, sectionRules); });
+        navSettings.addEventListener('click', function(e) { e.preventDefault(); navigateTo(navSettings, sectionSettings); });
+        navCreators.addEventListener('click', function(e) { e.preventDefault(); navigateTo(navCreators, sectionCreators); });
+        btnViewDocs.addEventListener('click', function() { navigateTo(navDocs, sectionDocs); });
+
+        // Back buttons (docs has id, new panels use classes)
+        document.getElementById('docs-back-btn').addEventListener('click', function() { navigateTo(navLive, null); });
+        document.querySelectorAll('.reports-back-btn, .rules-back-btn, .settings-back-btn').forEach(function(btn) {
+            btn.addEventListener('click', function() { navigateTo(navLive, null); });
         });
 
-        navCreators.addEventListener('click', (e) => {
-            e.preventDefault();
-            setActiveNav(navCreators);
-            showCreators();
-            window.scrollTo({ top: 0, behavior: 'smooth' });
-        });
+        // Settings theme toggle
+        var stb = document.getElementById('settings-theme-toggle');
+        if (stb) stb.addEventListener('click', function() { document.getElementById('theme-toggle').click(); });
 
-        // REPORTS, RULES, SETTINGS — decorative links, show live feed on click
-        allNavLinks.forEach(link => {
-            if (link !== navLive && link !== navCreators) {
-                link.addEventListener('click', (e) => {
-                    e.preventDefault();
-                    setActiveNav(link);
-                    showLiveFeed();
-                    window.scrollTo({ top: 0, behavior: 'smooth' });
-                });
+        // Footer LIVE FEED
+        var fl = document.getElementById('footer-live-feed');
+        if (fl) fl.addEventListener('click', function(e) { e.preventDefault(); navigateTo(navLive, null); });
+
+        // Reports content builder
+        function updateReportsContent() {
+            var c = document.getElementById('reports-content');
+            var d = window._lastAnalysisData;
+            if (!d) {
+                c.innerHTML = '<div class="flex items-center gap-3 py-8 justify-center"><span class="material-symbols-outlined text-2xl">cloud_upload</span><span>Upload a capture file to generate a report.</span></div>';
+                return;
             }
+            var rows = (d.app_breakdown || []).map(function(i) {
+                return '<div class="flex justify-between py-2 border-b border-outline-variant/50"><span class="text-on-surface">' + i.app + '</span><span class="text-primary-fixed">' + i.count + ' pkts (' + i.percentage.toFixed(1) + '%)</span></div>';
+            }).join('');
+            var doms = (d.detected_domains || []).map(function(i) {
+                return '<div class="flex justify-between py-2 border-b border-outline-variant/50"><span class="text-on-surface">' + i.domain + '</span><span class="text-primary-fixed">' + i.app + '</span></div>';
+            }).join('');
+            c.innerHTML = '<div class="flex flex-col gap-6">'
+                + '<div class="grid grid-cols-2 md:grid-cols-4 gap-4">'
+                + '<div class="border border-outline-variant p-4"><div class="text-on-surface-variant text-[11px] uppercase mb-1">TOTAL PACKETS</div><div class="text-primary-fixed text-xl font-bold">' + d.total_packets.toLocaleString() + '</div></div>'
+                + '<div class="border border-outline-variant p-4"><div class="text-on-surface-variant text-[11px] uppercase mb-1">FORWARDED</div><div class="text-on-surface text-xl font-bold">' + d.forwarded.toLocaleString() + '</div></div>'
+                + '<div class="border border-outline-variant p-4"><div class="text-on-surface-variant text-[11px] uppercase mb-1">DROPPED</div><div class="text-error text-xl font-bold">' + d.dropped.toLocaleString() + '</div></div>'
+                + '<div class="border border-outline-variant p-4"><div class="text-on-surface-variant text-[11px] uppercase mb-1">ACTIVE FLOWS</div><div class="text-on-surface text-xl font-bold">' + d.active_flows.toLocaleString() + '</div></div>'
+                + '</div>'
+                + '<div class="border-t border-outline-variant pt-4"><div class="text-primary-fixed uppercase mb-2">APP BREAKDOWN</div>' + rows + '</div>'
+                + (doms ? '<div class="border-t border-outline-variant pt-4"><div class="text-primary-fixed uppercase mb-2">DETECTED DOMAINS</div>' + doms + '</div>' : '')
+                + '</div>';
+        }
+        window._updateReportsContent = updateReportsContent;
+
+        // Mobile nav
+        var mobileNav = document.getElementById('mobile-nav');
+        function openMobileNav() { mobileNav.classList.add('open'); }
+        function closeMobileNav() { mobileNav.classList.remove('open'); }
+
+        document.getElementById('hamburger-btn').addEventListener('click', openMobileNav);
+        document.getElementById('mobile-nav-close').addEventListener('click', closeMobileNav);
+        document.getElementById('mobile-nav-backdrop').addEventListener('click', closeMobileNav);
+
+        var tgtMap = { live: navLive, docs: navDocs, reports: navReports, rules: navRules, settings: navSettings, creators: navCreators };
+        var panelMap = { live: null, docs: sectionDocs, reports: sectionReports, rules: sectionRules, settings: sectionSettings, creators: sectionCreators };
+        document.querySelectorAll('.mobile-nav-link').forEach(function(link) {
+            link.addEventListener('click', function(e) {
+                e.preventDefault();
+                var t = link.dataset.target;
+                if (t === 'reports') updateReportsContent();
+                navigateTo(tgtMap[t], panelMap[t]);
+            });
         });
     })();
 </script>
@@ -728,6 +1041,8 @@
                 });
                 if (!res.ok) throw new Error(`Server returned ${res.status}`);
                 const data = await res.json();
+                window._lastAnalysisData = data;
+                if (window._updateReportsContent) window._updateReportsContent();
 
                 // ----- 1. Populate stat boxes -----
                 statEls.total.textContent   = data.total_packets.toLocaleString();
@@ -819,6 +1134,20 @@
             // Reset so the same file can be re-selected
             fileInput.value = '';
         });
+    })();
+</script>
+<script>
+    // IST Clock (UTC+5:30)
+    (function() {
+        function tick() {
+            var now = new Date();
+            var utc = now.getTime() + (now.getTimezoneOffset() * 60000);
+            var ist = new Date(utc + (5.5 * 60 * 60000));
+            var el = document.getElementById('sys-time-value');
+            if (el) el.textContent = ist.getHours().toString().padStart(2,'0') + ':' + ist.getMinutes().toString().padStart(2,'0') + ':' + ist.getSeconds().toString().padStart(2,'0');
+        }
+        tick();
+        setInterval(tick, 1000);
     })();
 </script>
 </body></html>
