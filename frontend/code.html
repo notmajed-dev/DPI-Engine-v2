@@ -129,18 +129,122 @@
         html.light .bg-surface-container-high { background-color: #e0dedc; }
         html.light .bg-surface-container { background-color: #e5e3e1; }
         html.light .bg-outline-variant { background-color: #c0c0b8; }
+        html.light .bg-on-surface { background-color: #121414 !important; }
 
-        /* ── Light mode: text – black body copy, dark-green accents ── */
-        html.light .text-on-surface { color: #121414; }
-        html.light .text-on-surface-variant { color: #3a3a3a; }
-        html.light .text-primary-fixed { color: #3c5a00; }
-        html.light .text-secondary { color: #555; }
-        html.light .text-error { color: #ba1a1a; }
+        /* ── Light mode: text – black body copy, headings, nav, stats ── */
+        html.light,
+        html.light body {
+            color: #121414;
+        }
+        html.light .text-on-surface { color: #121414 !important; }
+        html.light .text-on-surface-variant { color: #2d3030 !important; }
+        html.light .text-primary-fixed { color: #121414 !important; }
+        html.light .text-outline { color: #121414 !important; }
+        html.light .text-secondary { color: #404040 !important; }
+        html.light .text-error { color: #ba1a1a !important; }
+
+        /* ── Light mode: headings & hero title (no pale green, no white drop-shadow glow) ── */
+        html.light h1,
+        html.light h1 span,
+        html.light .font-display-lg,
+        html.light .font-headline-md,
+        html.light .font-headline-lg {
+            color: #121414 !important;
+            filter: none !important;
+            text-shadow: none !important;
+        }
+
+        /* ── Light mode: navigation links ── */
+        html.light #desktop-nav a {
+            color: #404040 !important;
+        }
+        html.light #desktop-nav a:hover,
+        html.light #desktop-nav a.text-primary-fixed {
+            color: #121414 !important;
+            border-color: #121414 !important;
+        }
+        html.light .mobile-nav-link {
+            color: #121414 !important;
+        }
+        html.light .mobile-nav-link:hover {
+            color: #121414 !important;
+        }
+        html.light #sys-time-value {
+            color: #121414 !important;
+        }
 
         /* ── Light mode: borders ── */
-        html.light .border-outline-variant { border-color: #8e9379; }
-        html.light .border-primary-fixed { border-color: #6a8f00; }
-        html.light .border-outline { border-color: #b0b0a8; }
+        html.light .border-outline-variant { border-color: #b0b0a8 !important; }
+        html.light .border-outline { border-color: #909088 !important; }
+        html.light .border-primary-fixed { border-color: #121414 !important; }
+
+        /* ── Light mode: button outlines (crisp black text & borders) ── */
+        html.light #btn-upload-ml-header,
+        html.light #btn-analyze-ml-hero,
+        html.light #btn-view-docs,
+        html.light #settings-theme-toggle {
+            color: #121414 !important;
+            border-color: #121414 !important;
+            background-color: transparent !important;
+        }
+        html.light #btn-upload-ml-header:hover,
+        html.light #btn-analyze-ml-hero:hover,
+        html.light #btn-view-docs:hover,
+        html.light #settings-theme-toggle:hover {
+            background-color: rgba(18, 20, 20, 0.08) !important;
+        }
+
+        /* Primary filled buttons retain black text on neon fill */
+        html.light #btn-analyze-hero,
+        html.light #btn-upload-header,
+        html.light #docs-back-btn,
+        html.light .reports-back-btn,
+        html.light .rules-back-btn,
+        html.light .settings-back-btn {
+            background-color: #c3f400 !important;
+            color: #121414 !important;
+            border-color: #c3f400 !important;
+        }
+
+        /* ── Light mode: small accent icons & terminal cursor ── */
+        html.light .material-symbols-outlined.text-primary-fixed {
+            color: #446800 !important;
+        }
+        html.light .terminal-block {
+            color: #121414 !important;
+        }
+        html.light .terminal-block::before {
+            color: #557d00 !important;
+        }
+
+        /* ── Light mode: hover overrides ── */
+        html.light .hover\:text-primary-fixed:hover {
+            color: #121414 !important;
+        }
+        html.light .hover\:border-primary-fixed:hover {
+            border-color: #121414 !important;
+        }
+        html.light .hover\:bg-primary-fixed\/10:hover {
+            background-color: rgba(18, 20, 20, 0.06) !important;
+        }
+
+        /* ── Light mode: status containers & overlays ── */
+        html.light #section-traffic .border-l-primary-fixed {
+            border-left-color: #121414 !important;
+            color: #121414 !important;
+            background-color: rgba(195, 244, 0, 0.15) !important;
+        }
+        html.light footer .hazard-stripe div {
+            border-color: #121414 !important;
+            color: #121414 !important;
+        }
+        html.light [class*="shadow-[0_0_15px_rgba(195,244,0"] {
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08) !important;
+        }
+        html.light .glitch-hover:hover {
+            text-shadow: none !important;
+            transform: none !important;
+        }
 
         
         .hazard-stripe {
@@ -180,29 +284,6 @@
         }
         @keyframes blink { 50% { opacity: 0; } }
 
-        .id-card {
-            border: 2px solid theme('colors.outline-variant');
-            background-color: theme('colors.surface-container-lowest');
-            position: relative;
-        }
-        html.light .id-card {
-             border-color: theme('colors.outline');
-             background-color: theme('colors.light-bg');
-        }
-        
-        .id-card::before, .id-card::after {
-            content: '';
-            position: absolute;
-            width: 8px;
-            height: 8px;
-            border: 1px solid theme('colors.outline-variant');
-        }
-        .id-card::before { top: 4px; left: 4px; border-right: none; border-bottom: none; }
-        .id-card::after { bottom: 4px; right: 4px; border-left: none; border-top: none; }
-        html.light .id-card::before, html.light .id-card::after { border-color: theme('colors.outline'); }
-        
-        .creators-section { display: none; }
-        .creators-section.active { display: grid; }
         .docs-section { display: none; }
         .docs-section.active { display: flex; }
         .panel-section { display: none; }
@@ -235,7 +316,6 @@
 <a class="text-secondary hover:text-primary-fixed transition-colors" href="#" id="nav-reports">REPORTS</a>
 <a class="text-secondary hover:text-primary-fixed transition-colors" href="#" id="nav-rules">RULES</a>
 <a class="text-secondary hover:text-primary-fixed transition-colors" href="#" id="nav-settings">SETTINGS</a>
-<a class="text-secondary hover:text-primary-fixed transition-colors" href="#" id="nav-creators">CREATORS</a>
 </nav>
 </div>
 <div class="flex items-center gap-6">
@@ -253,6 +333,11 @@
                     UPLOAD CAPTURE
                     <span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">upload</span>
 <div class="absolute inset-0 bg-white/20 translate-y-full group-hover:translate-y-0 transition-transform duration-100 ease-in-out"></div>
+</button>
+<button id="btn-upload-ml-header" class="bg-transparent text-primary-fixed border border-primary-fixed font-headline-md text-headline-md px-4 py-1 flex items-center gap-2 hover:bg-primary-fixed/10 transition-colors glitch-hover relative overflow-hidden group">
+                    ML MODEL
+                    <span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">psychology</span>
+<div class="absolute inset-0 bg-primary-fixed/20 translate-y-full group-hover:translate-y-0 transition-transform duration-100 ease-in-out"></div>
 </button>
 <button class="text-secondary hover:text-primary-fixed transition-colors">
 <span class="material-symbols-outlined text-2xl">schedule</span>
@@ -274,8 +359,7 @@
 <a href="#" class="mobile-nav-link text-on-surface font-label-code text-label-code uppercase py-3 border-b border-outline-variant/50 hover:text-primary-fixed transition-colors" data-target="docs">VIEW DOCS</a>
 <a href="#" class="mobile-nav-link text-on-surface font-label-code text-label-code uppercase py-3 border-b border-outline-variant/50 hover:text-primary-fixed transition-colors" data-target="reports">REPORTS</a>
 <a href="#" class="mobile-nav-link text-on-surface font-label-code text-label-code uppercase py-3 border-b border-outline-variant/50 hover:text-primary-fixed transition-colors" data-target="rules">RULES</a>
-<a href="#" class="mobile-nav-link text-on-surface font-label-code text-label-code uppercase py-3 border-b border-outline-variant/50 hover:text-primary-fixed transition-colors" data-target="settings">SETTINGS</a>
-<a href="#" class="mobile-nav-link text-on-surface font-label-code text-label-code uppercase py-3 hover:text-primary-fixed transition-colors" data-target="creators">CREATORS</a>
+<a href="#" class="mobile-nav-link text-on-surface font-label-code text-label-code uppercase py-3 hover:text-primary-fixed transition-colors" data-target="settings">SETTINGS</a>
 </div>
 </div>
 <main class="flex-grow w-full max-w-[1440px] mx-auto p-gutter md:p-margin-desktop flex flex-col gap-12 relative z-10 border-l border-r border-outline-variant min-h-screen" id="main-content">
@@ -298,10 +382,14 @@
 <p class="font-label-code text-label-code text-on-surface-variant max-w-md uppercase tracking-wider leading-relaxed">
                     Analyzing network traffic in real time with systematic precision. A raw, digital-first approach for machine-age network security.
                 </p>
-<div class="flex gap-4 pt-4">
+<div class="flex gap-4 pt-4 flex-wrap">
 <button id="btn-analyze-hero" class="bg-primary-fixed text-on-primary-fixed font-headline-md text-headline-md px-6 py-2 flex items-center gap-2 hover:bg-primary-fixed-dim transition-colors border-2 border-primary-fixed">
-                        ANALYZE PCAP
+                        ANALYZE PCAP (SNI)
                         <span class="material-symbols-outlined">arrow_outward</span>
+</button>
+<button id="btn-analyze-ml-hero" class="bg-transparent text-primary-fixed border-2 border-primary-fixed font-headline-md text-headline-md px-6 py-2 flex items-center gap-2 hover:bg-primary-fixed/10 transition-colors">
+                        ANALYZE VIA ML MODEL
+                        <span class="material-symbols-outlined">psychology</span>
 </button>
 <button id="btn-view-docs" class="bg-transparent text-primary-fixed border-2 border-primary-fixed font-headline-md text-headline-md px-6 py-2 flex items-center gap-2 hover:bg-primary-fixed/10 transition-colors">
                         VIEW DOCS
@@ -339,55 +427,55 @@
 <!-- Stat Box 1 -->
 <div class="bg-surface-container-low p-6 flex flex-col gap-4 hover:bg-surface-container-high transition-colors group">
 <div class="flex justify-between items-start text-on-surface-variant">
-<span class="material-symbols-outlined">data_usage</span>
+<span id="stat-icon-1" class="material-symbols-outlined">data_usage</span>
 <span class="text-[10px] font-label-code">+</span>
 </div>
 <div>
-<div class="font-label-code text-label-code text-on-surface-variant uppercase mb-1">TOTAL PACKETS</div>
+<div id="stat-label-1" class="font-label-code text-label-code text-on-surface-variant uppercase mb-1">TOTAL PACKETS</div>
 <div id="stat-total-packets" class="font-headline-lg text-headline-lg text-primary-fixed group-hover:translate-x-1 transition-transform">—</div>
 </div>
 </div>
 <!-- Stat Box 2 -->
 <div class="bg-surface-container-low p-6 flex flex-col gap-4 hover:bg-surface-container-high transition-colors group">
 <div class="flex justify-between items-start text-on-surface-variant">
-<span class="material-symbols-outlined">forward</span>
+<span id="stat-icon-2" class="material-symbols-outlined">forward</span>
 <span class="text-[10px] font-label-code">+</span>
 </div>
 <div>
-<div class="font-label-code text-label-code text-on-surface-variant uppercase mb-1">FORWARDED</div>
+<div id="stat-label-2" class="font-label-code text-label-code text-on-surface-variant uppercase mb-1">FORWARDED</div>
 <div id="stat-forwarded" class="font-headline-lg text-headline-lg text-on-surface group-hover:translate-x-1 transition-transform">—</div>
 </div>
 </div>
 <!-- Stat Box 3 -->
 <div class="bg-surface-container-low p-6 flex flex-col gap-4 hover:bg-surface-container-high transition-colors group">
 <div class="flex justify-between items-start text-on-surface-variant">
-<span class="material-symbols-outlined text-error">cancel</span>
+<span id="stat-icon-3" class="material-symbols-outlined text-error">cancel</span>
 <span class="text-[10px] font-label-code">+</span>
 </div>
 <div>
-<div class="font-label-code text-label-code text-on-surface-variant uppercase mb-1">DROPPED</div>
+<div id="stat-label-3" class="font-label-code text-label-code text-on-surface-variant uppercase mb-1">DROPPED</div>
 <div id="stat-dropped" class="font-headline-lg text-headline-lg text-error group-hover:translate-x-1 transition-transform">—</div>
 </div>
 </div>
 <!-- Stat Box 4 -->
 <div class="bg-surface-container-low p-6 flex flex-col gap-4 hover:bg-surface-container-high transition-colors group">
 <div class="flex justify-between items-start text-on-surface-variant">
-<span class="material-symbols-outlined">timeline</span>
+<span id="stat-icon-4" class="material-symbols-outlined">timeline</span>
 <span class="text-[10px] font-label-code">+</span>
 </div>
 <div>
-<div class="font-label-code text-label-code text-on-surface-variant uppercase mb-1">ACTIVE FLOWS</div>
+<div id="stat-label-4" class="font-label-code text-label-code text-on-surface-variant uppercase mb-1">ACTIVE FLOWS</div>
 <div id="stat-active-flows" class="font-headline-lg text-headline-lg text-on-surface group-hover:translate-x-1 transition-transform">—</div>
 </div>
 </div>
 <!-- Stat Box 5 -->
 <div class="bg-surface-container-low p-6 flex flex-col gap-4 hover:bg-surface-container-high transition-colors group col-span-2 md:col-span-1">
 <div class="flex justify-between items-start text-on-surface-variant">
-<span class="material-symbols-outlined">memory</span>
+<span id="stat-icon-5" class="material-symbols-outlined">memory</span>
 <span class="text-[10px] font-label-code">+</span>
 </div>
 <div>
-<div class="font-label-code text-label-code text-on-surface-variant uppercase mb-1">ENGINE MODE</div>
+<div id="stat-label-5" class="font-label-code text-label-code text-on-surface-variant uppercase mb-1">ENGINE MODE</div>
 <div id="stat-threads" class="font-headline-lg text-headline-lg text-on-surface group-hover:translate-x-1 transition-transform">—</div>
 </div>
 </div>
@@ -397,8 +485,8 @@
 <section class="grid grid-cols-1 lg:grid-cols-12 gap-8" id="section-traffic">
 <!-- TRAFFIC GRID -->
 <div class="lg:col-span-8 flex flex-col gap-6">
-<div class="font-label-code text-label-code text-primary-fixed terminal-block ml-4 border-b border-outline-variant pb-2 inline-block self-start">
-                    /03 CLASSIFIED TRAFFIC
+<div id="traffic-grid-title" class="font-label-code text-label-code text-primary-fixed terminal-block ml-4 border-b border-outline-variant pb-2 inline-block self-start">
+                    /03 CLASSIFIED TRAFFIC (SNI)
                 </div>
 <div id="traffic-cards-container" class="grid grid-cols-1 md:grid-cols-2 gap-4">
 <!-- Card 1 -->
@@ -510,89 +598,6 @@
 <div class="mt-auto pt-4 border border-primary-fixed/30 bg-primary-fixed/5 text-primary-fixed p-3 text-center border-l-4 border-l-primary-fixed shadow-[inset_0_0_10px_rgba(195,244,0,0.05)]">
                         ALL SYSTEMS OPERATIONAL
                     </div>
-</div>
-</div>
-</section>
-<!-- 4. CREATORS SECTION (Hidden by default) -->
-<section class="creators-section grid-cols-1 md:grid-cols-3 gap-8" id="section-creators">
-<div class="md:col-span-3 flex flex-col gap-6">
-<div class="font-label-code text-label-code text-primary-fixed terminal-block ml-4 border-b border-outline-variant pb-2 inline-block self-start">
-            /05 CREATORS
-        </div>
-</div>
-<!-- ID Card 1 -->
-<div class="id-card p-6 flex flex-col gap-6">
-<div class="flex justify-between items-center border-b border-outline-variant pb-2 font-label-code text-label-code text-on-surface-variant">
-<span>DPI_ENGINE / ACCESS: DEV</span>
-<span class="material-symbols-outlined text-sm">badge</span>
-</div>
-<div class="flex flex-col gap-4">
-<div class="h-48 w-full border border-outline-variant relative overflow-hidden bg-surface-container-low group">
-<div class="absolute inset-0 opacity-30 mix-blend-screen bg-cover bg-center" style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuB2FLhjLRBtvSp6MxWXcx7ML6FGBZA0VBz-jVPBb4m5u-8PtLqQb35vMlZFZkRhPebDEnFt2sgKNtMCpzH_AWWsRqOsFCmmtRsUXQ-erGeHlr3A_FbMKjqxzUWkpKuewh2c1uvhQuCt3_grABE1OioJ3oWug2VqRrtLWnevx1mxC6TiqmaRwuYORZoO-vKU1rhufvZiF4h5kqPm-iOHemZNyCjC5nIHCexwyovbclvVE3m4dEU4FgdM4nzC6evDvztwyBY')"></div>
-<div class="absolute inset-0 bg-cover bg-center grayscale group-hover:grayscale-0 transition-all duration-500" style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuBU9g41DdQ_8qjQNBmDeOg2rgf1ty_cNoMHgEG98Gq9hyTfmiMOwPpOfSbBfp-c8GoPU7Cv19zwSHFAa3uuRNbocG43VnIpqumrsTp19xRBXm7kMtheB7xjJMhKNkHgxBE7Dv_wruWCZQDBIe6zMTnW1oUhd39oQeClCxAKS7_1zWsG3HVzv4ViptXulCp3VEWs1oSPB3QC2nL0FkO8qCqO2oCgCVEQtWxcF-PJHNjx_1jfJe3Opbdx5g')"></div>
-</div>
-<div class="font-label-code text-label-code flex flex-col gap-1">
-<div class="text-primary-fixed text-lg font-bold tracking-widest uppercase">MAJED</div>
-<div class="text-on-surface">ROLE: SYSTEMS ENGINEER</div>
-<div class="text-on-surface-variant text-xs mt-2">HASH: build_0x8312</div>
-</div>
-</div>
-<div class="border-t border-outline-variant pt-4 font-label-code text-[10px] leading-tight text-on-surface-variant uppercase text-justify">
-            AUTHORIZED CONTRIBUTORS TO THE DPI_ENGINE TRAFFIC CLASSIFICATION SYSTEM. ALL ACCESS LOGGED.
-        </div>
-<div class="mt-auto border-t border-dashed border-outline-variant pt-2 flex items-center justify-between font-label-code text-[10px] text-on-surface-variant">
-<span>MUFFAKHAM JAH COLLEGE OF ENGINEERING AND TECHNOLOGY / CSE DEPARTMENT</span>
-<span class="material-symbols-outlined text-primary-fixed">verified_user</span>
-</div>
-</div>
-<!-- ID Card 2 -->
-<div class="id-card p-6 flex flex-col gap-6">
-<div class="flex justify-between items-center border-b border-outline-variant pb-2 font-label-code text-label-code text-on-surface-variant">
-<span>DPI_ENGINE / ACCESS: DEV</span>
-<span class="material-symbols-outlined text-sm">badge</span>
-</div>
-<div class="flex flex-col gap-4">
-<div class="h-48 w-full border border-outline-variant relative overflow-hidden bg-surface-container-low group">
-<div class="absolute inset-0 opacity-30 mix-blend-screen bg-cover bg-center" style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuBAhoa92_lJ2-rolmz6QaO7wV3LLY4nkpKGKNeDLKT2ANVREk-iSiGxsR_hZechSNxwcjskJDcpxjSDKJIMzba1VEM95ZSXiRa292bz4vlVf8mni6xAC7WLoDcDh9E_bm90_-_eBKLF6eMGtfJHcxNGPijF5CDbZhZO9Gw_mwSqeRq29luNknuiJTCkmcm5Biwmmv3M709OGv-mOUjCrgBZo4EImItOrlLqHIho80ye9P7Ojs9fPJtA4DhJA-hHCJ_Y7JU')"></div>
-<div class="absolute inset-0 bg-cover bg-center grayscale group-hover:grayscale-0 transition-all duration-500" style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuDwM-5mvrDkGSGqx1QN0SMkw283iJe8PVZJ6BHHPd0BPfLkJ2jgi_T_VyHvtr40HsrnloFqfzVZzKh4iluCubFmUh3ox2jIQo6RfSy5zCpsMH9BOciUz9BYtlUmvnVCrAyoyH5l9E1DRNF-fpAcq5MPR5dciiKyf_51xSiwq9MvDN4yyO78bk21tZYLDmCKCW9BhcrU2S3xs3vABafxZjsRMaDi01AdlGIMzJOr10FDWSoTo2T8_ygOug')"></div>
-</div>
-<div class="font-label-code text-label-code flex flex-col gap-1">
-<div class="text-primary-fixed text-lg font-bold tracking-widest uppercase">ZAID</div>
-<div class="text-on-surface">ROLE: ML ENGINEER</div>
-<div class="text-on-surface-variant text-xs mt-2">HASH: build_0x2973</div>
-</div>
-</div>
-<div class="border-t border-outline-variant pt-4 font-label-code text-[10px] leading-tight text-on-surface-variant uppercase text-justify">
-            AUTHORIZED CONTRIBUTORS TO THE DPI_ENGINE TRAFFIC CLASSIFICATION SYSTEM. ALL ACCESS LOGGED.
-        </div>
-<div class="mt-auto border-t border-dashed border-outline-variant pt-2 flex items-center justify-between font-label-code text-[10px] text-on-surface-variant">
-<span>MUFFAKHAM JAH COLLEGE OF ENGINEERING AND TECHNOLOGY / CSE DEPARTMENT</span>
-<span class="material-symbols-outlined text-primary-fixed">verified_user</span>
-</div>
-</div>
-<!-- ID Card 3 -->
-<div class="id-card p-6 flex flex-col gap-6">
-<div class="flex justify-between items-center border-b border-outline-variant pb-2 font-label-code text-label-code text-on-surface-variant">
-<span>DPI_ENGINE / ACCESS: DEV</span>
-<span class="material-symbols-outlined text-sm">badge</span>
-</div>
-<div class="flex flex-col gap-4">
-<div class="h-48 w-full border border-outline-variant relative overflow-hidden bg-surface-container-low group">
-<div class="absolute inset-0 opacity-30 mix-blend-screen bg-cover bg-center" style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuApeGfhiir5yV6oITr-z0w9fWy3CJjATogXthL3uttv48Fyp9Gpruwn7wO0nB3F4I3hyxEHK4SKCoczjkzoaOEK7Bu7lblcko9Aq2iGoAtFXWtx3GQkrXmOslRGi-iXWjLyi8xzUiR2boFVS2Z518lTOiafNbwin82-C-zt6oUMiLT3HIliB7V28ulzpbUKER4NsWE38TKOebVwu-jRpBYPnaQ_-mdBqcOMGBjouY3G-5OxLu07UuvckeOybcrPPML77tQ')"></div>
-<div class="absolute inset-0 bg-cover bg-center grayscale group-hover:grayscale-0 transition-all duration-500" style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuDY2YjWpBhxAAgGPnzb2iYEq8SRSHCFfXnLGth1bA5ZLdxSyBlldOGd0LipUchTy3Y2L4xxL5km5ZlryRrKblWVok-YnnLi_V6IWCYywNm78aua_KuWbFI2DHKtw6aulpcbH_04VxDoAoIu55ADXg1RbYGdYB4HcOlb0Sl8ceaaVwqTzf4D0COtLL2N0Ku5ABqsG3z5Bq8bNIDUTUktmngZo7RAPQ6B5XqsOeJPCWnpwyTg7EOirhQNeg')"></div>
-</div>
-<div class="font-label-code text-label-code flex flex-col gap-1">
-<div class="text-primary-fixed text-lg font-bold tracking-widest uppercase">MAAZ</div>
-<div class="text-on-surface">ROLE: BACKEND ENGINEER</div>
-<div class="text-on-surface-variant text-xs mt-2">HASH: build_0x1147</div>
-</div>
-</div>
-<div class="border-t border-outline-variant pt-4 font-label-code text-[10px] leading-tight text-on-surface-variant uppercase text-justify">
-            AUTHORIZED CONTRIBUTORS TO THE DPI_ENGINE TRAFFIC CLASSIFICATION SYSTEM. ALL ACCESS LOGGED.
-        </div>
-<div class="mt-auto border-t border-dashed border-outline-variant pt-2 flex items-center justify-between font-label-code text-[10px] text-on-surface-variant">
-<span>MUFFAKHAM JAH COLLEGE OF ENGINEERING AND TECHNOLOGY / CSE DEPARTMENT</span>
-<span class="material-symbols-outlined text-primary-fixed">verified_user</span>
 </div>
 </div>
 </section>
@@ -883,20 +888,18 @@
         var navReports = document.getElementById('nav-reports');
         var navRules = document.getElementById('nav-rules');
         var navSettings = document.getElementById('nav-settings');
-        var navCreators = document.getElementById('nav-creators');
         var btnViewDocs = document.getElementById('btn-view-docs');
 
         var sectionHero = document.getElementById('section-hero');
         var sectionStats = document.getElementById('section-stats');
         var sectionTraffic = document.getElementById('section-traffic');
-        var sectionCreators = document.getElementById('section-creators');
         var sectionDocs = document.getElementById('section-docs');
         var sectionReports = document.getElementById('section-reports');
         var sectionRules = document.getElementById('section-rules');
         var sectionSettings = document.getElementById('section-settings');
 
         var allNavLinks = document.querySelectorAll('#desktop-nav a');
-        var panels = [sectionCreators, sectionDocs, sectionReports, sectionRules, sectionSettings];
+        var panels = [sectionDocs, sectionReports, sectionRules, sectionSettings];
 
         function setActiveNav(link) {
             allNavLinks.forEach(function(l) {
@@ -935,7 +938,6 @@
         navReports.addEventListener('click', function(e) { e.preventDefault(); updateReportsContent(); navigateTo(navReports, sectionReports); });
         navRules.addEventListener('click', function(e) { e.preventDefault(); navigateTo(navRules, sectionRules); });
         navSettings.addEventListener('click', function(e) { e.preventDefault(); navigateTo(navSettings, sectionSettings); });
-        navCreators.addEventListener('click', function(e) { e.preventDefault(); navigateTo(navCreators, sectionCreators); });
         btnViewDocs.addEventListener('click', function() { navigateTo(navDocs, sectionDocs); });
 
         // Back buttons (docs has id, new panels use classes)
@@ -988,8 +990,8 @@
         document.getElementById('mobile-nav-close').addEventListener('click', closeMobileNav);
         document.getElementById('mobile-nav-backdrop').addEventListener('click', closeMobileNav);
 
-        var tgtMap = { live: navLive, docs: navDocs, reports: navReports, rules: navRules, settings: navSettings, creators: navCreators };
-        var panelMap = { live: null, docs: sectionDocs, reports: sectionReports, rules: sectionRules, settings: sectionSettings, creators: sectionCreators };
+        var tgtMap = { live: navLive, docs: navDocs, reports: navReports, rules: navRules, settings: navSettings };
+        var panelMap = { live: null, docs: sectionDocs, reports: sectionReports, rules: sectionRules, settings: sectionSettings };
         document.querySelectorAll('.mobile-nav-link').forEach(function(link) {
             link.addEventListener('click', function(e) {
                 e.preventDefault();
@@ -1023,12 +1025,31 @@
 
             // Visual feedback while waiting
             const statEls = {
-                total:  document.getElementById('stat-total-packets'),
-                fwd:    document.getElementById('stat-forwarded'),
-                drop:   document.getElementById('stat-dropped'),
-                flows:  document.getElementById('stat-active-flows'),
+                total:   document.getElementById('stat-total-packets'),
+                fwd:     document.getElementById('stat-forwarded'),
+                drop:    document.getElementById('stat-dropped'),
+                flows:   document.getElementById('stat-active-flows'),
                 threads: document.getElementById('stat-threads'),
             };
+            const statLabels = {
+                total: document.getElementById('stat-label-1'),
+                fwd:   document.getElementById('stat-label-2'),
+                flows: document.getElementById('stat-label-4'),
+            };
+            const statIcons = {
+                total: document.getElementById('stat-icon-1'),
+                fwd:   document.getElementById('stat-icon-2'),
+                flows: document.getElementById('stat-icon-4'),
+            };
+
+            // Restore SNI stat labels & icons
+            if (statLabels.total) statLabels.total.textContent = 'TOTAL PACKETS';
+            if (statIcons.total)  statIcons.total.textContent  = 'data_usage';
+            if (statLabels.fwd)   statLabels.fwd.textContent   = 'FORWARDED';
+            if (statIcons.fwd)    statIcons.fwd.textContent    = 'forward';
+            if (statLabels.flows) statLabels.flows.textContent = 'ACTIVE FLOWS';
+            if (statIcons.flows)  statIcons.flows.textContent  = 'timeline';
+
             Object.values(statEls).forEach(el => { if (el) el.textContent = '...'; });
 
             try {
@@ -1043,6 +1064,8 @@
                 const data = await res.json();
                 window._lastAnalysisData = data;
                 if (window._updateReportsContent) window._updateReportsContent();
+
+                document.getElementById('traffic-grid-title').textContent = '/03 CLASSIFIED TRAFFIC (SNI)';
 
                 // ----- 1. Populate stat boxes -----
                 statEls.total.textContent   = data.total_packets.toLocaleString();
@@ -1134,6 +1157,121 @@
             // Reset so the same file can be re-selected
             fileInput.value = '';
         });
+
+        // ML FILE INPUT LOGIC
+        const mlFileInput = document.createElement('input');
+        mlFileInput.type = 'file';
+        mlFileInput.accept = '.pcap,.pcapng,.cap';
+        mlFileInput.style.display = 'none';
+        document.body.appendChild(mlFileInput);
+
+        document.getElementById('btn-upload-ml-header').addEventListener('click', () => mlFileInput.click());
+        document.getElementById('btn-analyze-ml-hero').addEventListener('click', () => mlFileInput.click());
+
+        mlFileInput.addEventListener('change', async () => {
+            const file = mlFileInput.files[0];
+            if (!file) return;
+
+            const statEls = {
+                total:   document.getElementById('stat-total-packets'),
+                fwd:     document.getElementById('stat-forwarded'),
+                drop:    document.getElementById('stat-dropped'),
+                flows:   document.getElementById('stat-active-flows'),
+                threads: document.getElementById('stat-threads'),
+            };
+            const statLabels = {
+                total: document.getElementById('stat-label-1'),
+                fwd:   document.getElementById('stat-label-2'),
+                flows: document.getElementById('stat-label-4'),
+            };
+            const statIcons = {
+                total: document.getElementById('stat-icon-1'),
+                fwd:   document.getElementById('stat-icon-2'),
+                flows: document.getElementById('stat-icon-4'),
+            };
+
+            // Switch to ML-relevant stat labels & icons
+            if (statLabels.total) statLabels.total.textContent = 'FLOWS ANALYZED';
+            if (statIcons.total)  statIcons.total.textContent  = 'query_stats';
+            if (statLabels.fwd)   statLabels.fwd.textContent   = 'AVG CONFIDENCE';
+            if (statIcons.fwd)    statIcons.fwd.textContent    = 'psychology';
+            if (statLabels.flows) statLabels.flows.textContent = 'CLASSES DETECTED';
+            if (statIcons.flows)  statIcons.flows.textContent  = 'category';
+
+            Object.values(statEls).forEach(el => { if (el) el.textContent = '...'; });
+
+            try {
+                const formData = new FormData();
+                formData.append('file', file);
+
+                const res = await fetch('/api/analyze-ml', {
+                    method: 'POST',
+                    body: formData,
+                });
+                if (!res.ok) throw new Error(`Server returned ${res.status}`);
+                const data = await res.json();
+                
+                document.getElementById('traffic-grid-title').textContent = '/03 ML BEHAVIORAL CLASSIFICATION (EXPERIMENTAL)';
+                
+                // Calculate average confidence and unique predicted classes
+                let avgConfidence = '0.0%';
+                let uniqueClasses = 0;
+                if (data.flows && data.flows.length > 0) {
+                    const sum = data.flows.reduce((acc, f) => acc + (Number(f.confidence) || 0), 0);
+                    avgConfidence = (sum / data.flows.length).toFixed(1) + '%';
+                    uniqueClasses = new Set(data.flows.map(f => f.predicted_label)).size;
+                }
+
+                // Populate ML-relevant stats into the LIVE STATISTICS row
+                statEls.total.textContent   = (data.total_flows || 0).toLocaleString();
+                statEls.fwd.textContent     = avgConfidence;
+                statEls.drop.textContent    = '0';
+                statEls.flows.textContent   = uniqueClasses.toLocaleString();
+                statEls.threads.textContent = 'PYTHON (ML)';
+
+                const container = document.getElementById('traffic-cards-container');
+                container.innerHTML = ''; 
+
+                const patterns = [
+                    "bg-[radial-gradient(circle_at_center,theme('colors.primary-fixed')_1px,transparent_1px)] bg-[size:10px_10px]",
+                    "bg-[linear-gradient(45deg,theme('colors.on-surface')_25%,transparent_25%,transparent_75%,theme('colors.on-surface')_75%,theme('colors.on-surface')_100%)] bg-[size:20px_20px]",
+                    "bg-[radial-gradient(circle_at_center,theme('colors.on-surface')_1px,transparent_1px)] bg-[size:8px_8px]",
+                    "bg-[linear-gradient(135deg,theme('colors.primary-fixed')_25%,transparent_25%,transparent_75%,theme('colors.primary-fixed')_75%)] bg-[size:16px_16px]",
+                ];
+
+                (data.flows || []).forEach((flow, i) => {
+                    const pattern = patterns[i % patterns.length];
+                    const isFirst = i === 0;
+
+                    const card = document.createElement('div');
+                    card.className = 'border border-outline-variant bg-surface-container-lowest flex flex-col hover:border-primary-fixed transition-colors group';
+                    card.innerHTML = `
+                        <div class="h-40 bg-surface-container-high p-4 flex flex-col justify-between border-b border-outline-variant relative overflow-hidden">
+                            <div class="absolute inset-0 opacity-20 ${pattern}"></div>
+                            <div class="relative z-10 font-headline-lg text-headline-lg ${isFirst ? 'text-primary-fixed' : 'text-on-surface'}">${flow.confidence}%</div>
+                            <div class="relative z-10 w-full h-2 bg-background border border-outline">
+                                <div class="h-full ${isFirst ? 'bg-primary-fixed' : 'bg-on-surface'}" style="width:${flow.confidence}%"></div>
+                            </div>
+                        </div>
+                        <div class="p-4 flex flex-col justify-end bg-background">
+                            <div class="font-label-code text-label-code text-primary-fixed mb-1 truncate" title="${flow.flow_id}">${flow.flow_id}</div>
+                            <div class="font-label-code text-label-code text-on-surface-variant uppercase flex justify-between">
+                                <span>${flow.predicted_label}</span>
+                                <span class="material-symbols-outlined text-sm">psychology</span>
+                            </div>
+                        </div>
+                    `;
+                    container.appendChild(card);
+                });
+                
+            } catch (err) {
+                console.error('ML Analysis failed:', err);
+                Object.values(statEls).forEach(el => { if (el) el.textContent = 'ERR'; });
+            }
+
+            mlFileInput.value = '';
+        });
+
     })();
 </script>
 <script>

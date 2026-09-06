@@ -38,3 +38,8 @@ node_modules/
 Thumbs.db
 
 test_output.json
+
+pipeline/data/raw_pcaps/
+pipeline/data/synthetic_flow_dataset.csv
+pipeline/data/test_out.pcap
+pipeline/data/test_report.json
